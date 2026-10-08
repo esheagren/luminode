@@ -1,0 +1,14 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>GPT-2 browser spike</title>
+  <style>body{font-family:ui-monospace,monospace;padding:16px;background:#fff;color:#111} pre{white-space:pre-wrap}</style>
+</head>
+<body>
+  <h1>GPT-2 small in the browser (transformers.js) spike</h1>
+  <p>Query params: <code>?device=wasm|webgpu&amp;dtype=fp32|fp16|q8|int8&amp;file=model|model_probe|decoder_model_merged&amp;source=local|remote</code></p>
+  <pre id="log"></pre>
+  <script type="module" src="./dist/main.bundle.js"></script>
+</body>
+</html>
