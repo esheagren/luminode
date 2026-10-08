@@ -233,10 +233,15 @@ export default function StreamLens() {
           onClick={() => setPlaying((v) => !v)}
           aria-pressed={playing}
           disabled={reduced}
-          title={reduced ? 'Playback is off under reduced motion; use the scrubber' : undefined}
+          aria-describedby={reduced ? 'stream-play-note' : undefined}
         >
           {playing ? 'Pause' : 'Play'}
         </button>
+        {reduced && (
+          <span id="stream-play-note" className={s.hint}>
+            Playback is off under reduced motion; use the scrubber.
+          </span>
+        )}
         <label className={`${ui.field} ${s.grow}`}>
           <span className={ui.label}>
             Sub-step {step + 1} of {steps.length} · {cur.layer >= 0 && cur.layer < LAYERS ? `L${cur.layer} ` : ''}

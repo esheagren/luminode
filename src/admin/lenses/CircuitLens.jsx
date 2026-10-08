@@ -196,7 +196,7 @@ export default function CircuitLens() {
               aria-pressed={patched.has(n.id)}
               onClick={() => toggle(n.id)}
             >
-              {patched.has(n.id) ? 'unpatch' : 'patch'} {n.label}
+              patch {n.label}
             </button>
           </li>
         ))}

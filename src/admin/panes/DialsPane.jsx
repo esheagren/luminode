@@ -6,6 +6,7 @@ import {
   EASING_PRESETS,
   getCommitted,
   readToken,
+  readDuration,
   setToken,
   setBaseSize,
   setBpm,
@@ -40,7 +41,8 @@ function familyOf(value) {
 function readState() {
   const colors = Object.fromEntries(COLOR_TOKENS.map((k) => [k, toHex(readToken(k))]))
   const fonts = Object.fromEntries(FONT_TOKENS.map((k) => [k, familyOf(readToken(k))]))
-  const bpm = beatToBpm(parseMs(readToken('beat')))
+  // the dialled or committed beat, not the reduced-motion override (which would read as 240 bpm)
+  const bpm = beatToBpm(parseMs(readDuration('beat')))
   const ease = readToken('ease').replace(/\s+/g, '')
   const base = parseFloat(getComputedStyle(document.documentElement).fontSize)
   return { colors, fonts, bpm, ease, base }
@@ -120,7 +122,7 @@ export default function DialsPane() {
                   <input
                     type="color"
                     className={ui.color}
-                    value={/^#[0-9a-f]{6}$/i.test(state.colors[k]) ? state.colors[k] : '#000000'}
+                    value={/^#[0-9a-f]{6}$/i.test(state.colors[k]) ? state.colors[k] : toHex(getCommitted()[k])}
                     onChange={(e) => onColor(k, e.target.value)}
                   />
                   <span className={ui.srOnly}>{k} swatch</span>
@@ -269,7 +271,9 @@ export default function DialsPane() {
               {copied ? 'Copied' : 'Copy'}
             </button>
           </div>
-          <pre className={s.pre}>{exported}</pre>
+          <pre className={s.pre} tabIndex={0} aria-label="Exported tokens.css">
+            {exported}
+          </pre>
         </section>
       )}
     </div>

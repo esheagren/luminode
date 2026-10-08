@@ -1,12 +1,16 @@
-import { useState } from 'react'
 import { AUDIT_ITEMS, GROUPS, AUDIT_STATUSES } from '../data/audit.js'
+import { createStore, useStore } from '../lib/sessionStore.js'
 import ui from '../ui.module.css'
 import s from './AuditPane.module.css'
 
 const cap = (k) => k.charAt(0).toUpperCase() + k.slice(1)
 
+// Lives outside the component so status changes survive switching panes.
+const statusStore = createStore(Object.fromEntries(AUDIT_ITEMS.map((i) => [i.id, i.status])))
+
 export default function AuditPane() {
-  const [statuses, setStatuses] = useState(() => Object.fromEntries(AUDIT_ITEMS.map((i) => [i.id, i.status])))
+  const statuses = useStore(statusStore)
+  const setStatuses = statusStore.set
   const counts = AUDIT_STATUSES.map((st) => [st, Object.values(statuses).filter((v) => v === st).length])
 
   return (

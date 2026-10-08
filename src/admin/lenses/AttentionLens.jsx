@@ -146,17 +146,40 @@ export default function AttentionLens() {
     [W, H, p, weights, hover, layer, head, pattern, tokens],
   )
 
-  const onMove = (e) => {
-    const r = canvas.current.getBoundingClientRect()
-    const pad = p.textSm * 1.2
-    const slot = (W - pad * 2) / tokens.length
-    const i = Math.floor((e.clientX - r.left - pad) / slot)
-    const next = i >= 0 && i < tokens.length ? i : -1
+  const select = (next) => {
     if (next !== hover) {
       setHover(next)
       if (reduced) redraw()
     }
   }
+  const onMove = (e) => {
+    const r = canvas.current.getBoundingClientRect()
+    const pad = p.textSm * 1.2
+    const slot = (W - pad * 2) / tokens.length
+    const i = Math.floor((e.clientX - r.left - pad) / slot)
+    select(i >= 0 && i < tokens.length ? i : -1)
+  }
+  const onKey = (e) => {
+    const n = tokens.length
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown') select((hover + 1 + n) % n)
+    else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') select((hover - 1 + n) % n)
+    else if (e.key === 'Escape') select(-1)
+    else return
+    e.preventDefault()
+  }
+
+  // what the isolated token reads, for the live region
+  const announce = (() => {
+    if (hover < 0) return ''
+    const reads = weights[hover]
+      .map((w, j) => [w, j])
+      .filter(([, j]) => j !== hover)
+      .sort((a, b) => b[0] - a[0])
+      .slice(0, 3)
+      .map(([w, j]) => `${tokens[j]} ${Math.round(w * 100)}%`)
+      .join(', ')
+    return `${tokens[hover]}, token ${hover + 1} of ${tokens.length}. Reads ${reads}.`
+  })()
 
   return (
     <div className={s.lens}>
@@ -195,16 +218,22 @@ export default function AttentionLens() {
       <div ref={wrap} className={`${s.stage} ${s.stageShort}`}>
         <canvas
           ref={canvas}
+          tabIndex={0}
           role="img"
-          aria-label="Attention lens: sixteen tokens in a row; arcs from each token back to the tokens it attends to, opacity equal to the weight."
-          onMouseMove={onMove}
-          onMouseLeave={() => {
-            setHover(-1)
-            if (reduced) redraw()
+          aria-label="Attention lens: sixteen tokens in a row; arcs from each token back to the tokens it attends to, opacity equal to the weight. Arrow keys move between tokens."
+          onPointerMove={onMove}
+          onPointerLeave={() => select(-1)}
+          onKeyDown={onKey}
+          onFocus={() => {
+            if (hover < 0) select(0)
           }}
+          onBlur={() => select(-1)}
         />
       </div>
-      <p className={s.hint}>hover a token to isolate its reads · the active token advances one per beat</p>
+      <div className={ui.srOnly} aria-live="polite">
+        {announce}
+      </div>
+      <p className={s.hint}>hover or arrow to a token to isolate its reads · the active token advances one per beat</p>
       <p className={ui.caption}>
         <em>Fake:</em> the weights. They are generated from the chosen pattern type plus deterministic noise seeded by
         layer and head; the 12×12 selectors change the noise, not the pattern. <em>Real:</em> arcs with alpha = weight,

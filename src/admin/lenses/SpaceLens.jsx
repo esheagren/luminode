@@ -1,6 +1,6 @@
-import { useRef, useEffect, useMemo } from 'react'
+import { useRef, useEffect, useMemo, useState } from 'react'
 import { useCanvasSize, usePalette } from '../lib/useCanvas.js'
-import { useAnimationFrame } from '../lib/useAnimationFrame.js'
+import { useAnimationFrame, usePrefersReducedMotion } from '../lib/useAnimationFrame.js'
 import { rgba, mix } from '../lib/tokens.js'
 import ui from '../ui.module.css'
 import s from './lens.module.css'
@@ -48,18 +48,32 @@ export default function SpaceLens() {
   const { w: W, h: H } = useCanvasSize(wrap, canvas)
   const p = usePalette()
   const graph = useMemo(buildGraph, [])
+  const reduced = usePrefersReducedMotion()
   const st = useRef({ pulses: [], hover: -1, lastBeat: -1, focus: -1 })
+  const [announce, setAnnounce] = useState('')
 
   // Fire a node: it lights, and after half a beat each neighbour fires one hop further out.
+  // Under reduced motion nothing travels or decays: the node and its direct neighbours light at a
+  // fixed intensity and stay lit until the next fire replaces them. No pulses are pushed.
   const fire = (i, depth, start) => {
     const n = graph.nodes[i]
+    if (reduced) {
+      graph.nodes.forEach((m) => {
+        m.a = m.q ? 0.6 : 0
+      })
+      n.a = 1
+      graph.adj[i].forEach((j) => {
+        graph.nodes[j].a = Math.max(graph.nodes[j].a, 0.75)
+      })
+      return
+    }
     n.a = 1
     n.born = start
     if (depth >= MAX_DEPTH) return
     graph.adj[i].forEach((j) => st.current.pulses.push({ from: i, to: j, start, depth, delivered: false }))
   }
 
-  const { reduced, redraw } = useAnimationFrame(
+  const { redraw } = useAnimationFrame(
     (t, dt, now) => {
       const ctx = canvas.current?.getContext('2d')
       if (!ctx || !W || !H) return
@@ -72,11 +86,10 @@ export default function SpaceLens() {
       const px = (n) => [p.textLg * 3 + n.x * (W - p.textLg * 6), p.textLg * 3.5 + n.y * (H - p.textLg * 7.5)]
 
       if (reduced) {
+        // static frame: query words glow, fired words (see fire) hold their intensity, nothing travels
+        S.pulses = []
         graph.nodes.forEach((n) => {
-          if (n.q) {
-            n.a = 0.6
-            n.born = now
-          }
+          if (n.q && n.a < 0.6) n.a = 0.6
         })
       } else {
         const beat = Math.floor(t / BEAT)
@@ -230,41 +243,66 @@ export default function SpaceLens() {
       })
       return best
     }
+    const describe = (i) => {
+      const n = graph.nodes[i]
+      const near = graph.adj[i].map((j) => graph.nodes[j].w).join(', ')
+      return `${n.w}${n.q ? ' (query word)' : ''}. Neighbours: ${near}.`
+    }
+    const setFocus = (i) => {
+      st.current.focus = i
+      setAnnounce(i >= 0 ? describe(i) : '')
+    }
     const onMove = (e) => {
       st.current.hover = hit(e)
       cv.style.cursor = st.current.hover >= 0 ? 'pointer' : 'default'
+      if (reduced) redraw()
+    }
+    const onLeave = () => {
+      st.current.hover = -1
+      cv.style.cursor = 'default'
       if (reduced) redraw()
     }
     const onClick = (e) => {
       const i = hit(e)
       if (i < 0) return
       fire(i, 0, performance.now())
+      if (document.activeElement === cv) setFocus(i)
       if (reduced) redraw()
     }
     const onKey = (e) => {
       const N = graph.nodes.length
       if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
-        st.current.focus = (st.current.focus + 1 + N) % N
+        setFocus((st.current.focus + 1 + N) % N)
       } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
-        st.current.focus = (st.current.focus - 1 + N) % N
+        setFocus((st.current.focus - 1 + N) % N)
       } else if ((e.key === 'Enter' || e.key === ' ') && st.current.focus >= 0) {
         fire(st.current.focus, 0, performance.now())
+        setAnnounce(`Fired ${graph.nodes[st.current.focus].w}.`)
       } else return
       e.preventDefault()
       if (reduced) redraw()
     }
-    const onBlur = () => {
-      st.current.focus = -1
+    // the ring shows as soon as the canvas has focus: the first query word unless something is focused
+    const onFocus = () => {
+      if (st.current.focus < 0) setFocus(Math.max(0, graph.nodes.findIndex((n) => n.q)))
       if (reduced) redraw()
     }
-    cv.addEventListener('mousemove', onMove)
+    const onBlur = () => {
+      setFocus(-1)
+      if (reduced) redraw()
+    }
+    cv.addEventListener('pointermove', onMove)
+    cv.addEventListener('pointerleave', onLeave)
     cv.addEventListener('click', onClick)
     cv.addEventListener('keydown', onKey)
+    cv.addEventListener('focus', onFocus)
     cv.addEventListener('blur', onBlur)
     return () => {
-      cv.removeEventListener('mousemove', onMove)
+      cv.removeEventListener('pointermove', onMove)
+      cv.removeEventListener('pointerleave', onLeave)
       cv.removeEventListener('click', onClick)
       cv.removeEventListener('keydown', onKey)
+      cv.removeEventListener('focus', onFocus)
       cv.removeEventListener('blur', onBlur)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -279,6 +317,9 @@ export default function SpaceLens() {
           role="img"
           aria-label="Space lens: thirty-five words as glowing points joined by filaments. Click or press Enter on a word to fire it; activation spreads along the filaments."
         />
+      </div>
+      <div className={ui.srOnly} aria-live="polite">
+        {announce}
       </div>
       <p className={s.hint}>click a word to fire it · arrows + enter from the keyboard · query words fire every 8 beats</p>
       <p className={ui.caption}>

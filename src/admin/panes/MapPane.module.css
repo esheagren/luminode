@@ -207,6 +207,11 @@
   text-align: left;
   line-height: 1.15;
 }
+.noteTitle:focus-visible {
+  outline: 2px solid var(--phosphor);
+  outline-offset: 4px;
+  border-radius: var(--radius-sm);
+}
 .noteMeta {
   display: flex;
   flex-wrap: wrap;

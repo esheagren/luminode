@@ -9,11 +9,15 @@ export function useCanvasSize(containerRef, canvasRef) {
     const el = containerRef.current
     const cv = canvasRef.current
     if (!el || !cv) return undefined
+    let applied = { w: 0, h: 0, dpr: 0 }
     const apply = () => {
       const r = el.getBoundingClientRect()
       const dpr = Math.min(window.devicePixelRatio || 1, 2)
       const w = Math.max(1, Math.round(r.width))
       const h = Math.max(1, Math.round(r.height))
+      // assigning cv.width clears the bitmap, so skip when nothing changed (ResizeObserver fires once on observe)
+      if (w === applied.w && h === applied.h && dpr === applied.dpr) return
+      applied = { w, h, dpr }
       cv.width = Math.round(w * dpr)
       cv.height = Math.round(h * dpr)
       cv.style.width = `${w}px`

@@ -35,7 +35,7 @@ export default function FeaturesLens() {
   const { w: W, h: H } = useCanvasSize(wrap, canvas)
   const p = usePalette()
   const [hover, setHover] = useState({ feature: -1, token: -1 })
-  const st = useRef({ hoverAt: 0, prev: null })
+  const st = useRef({ hoverAt: 0, prev: null, labelKey: '', labels: [] })
 
   const layout = () => {
     const labelW = Math.min(W * 0.42, p.textSm * 20)
@@ -96,6 +96,18 @@ export default function FeaturesLens() {
         }
       })
 
+      // feature labels truncated to the label column; measured only when the column or the type changes
+      ctx.font = `${p.textXs}px ${p.fontMono}`
+      const labelKey = `${labelW}|${p.textXs}|${p.fontMono}`
+      if (S.labelKey !== labelKey) {
+        S.labelKey = labelKey
+        S.labels = FEATURES.map((f) => {
+          let shown = f.label
+          while (ctx.measureText(shown).width > labelW - p.textSm && shown.length > 4) shown = shown.slice(0, -2)
+          return shown !== f.label ? shown.slice(0, -1) + '…' : shown
+        })
+      }
+
       // feature rows
       FEATURES.forEach((f, fi) => {
         const y = top + rowH * (fi + 0.5)
@@ -114,11 +126,7 @@ export default function FeaturesLens() {
         ctx.textAlign = 'left'
         ctx.textBaseline = 'middle'
         ctx.fillStyle = rgba(lit ? mix(p.fg, p.amber, ease) : p.mute, al)
-        const text = f.label
-        let shown = text
-        while (ctx.measureText(shown).width > labelW - p.textSm && shown.length > 4) shown = shown.slice(0, -2)
-        if (shown !== text) shown = shown.slice(0, -1) + '…'
-        ctx.fillText(shown, p.textSm * 0.5, y)
+        ctx.fillText(S.labels[fi], p.textSm * 0.5, y)
 
         TOKENS.forEach((tok, ti) => {
           const v = f.fires[ti]
@@ -136,6 +144,12 @@ export default function FeaturesLens() {
     [W, H, p, hover],
   )
 
+  const select = (next) => {
+    if (next.feature !== hover.feature || next.token !== hover.token) {
+      setHover(next)
+      if (reduced) redraw()
+    }
+  }
   const onMove = (e) => {
     const r = canvas.current.getBoundingClientRect()
     const mx = e.clientX - r.left
@@ -149,27 +163,57 @@ export default function FeaturesLens() {
       const ti = Math.floor((mx - labelW) / cellW)
       if (ti >= 0 && ti < TOKENS.length) next = { feature: -1, token: ti }
     }
-    if (next.feature !== hover.feature || next.token !== hover.token) {
-      setHover(next)
-      if (reduced) redraw()
-    }
+    select(next)
   }
+  // left/right walk the tokens, up/down walk the features
+  const onKey = (e) => {
+    const nt = TOKENS.length
+    const nf = FEATURES.length
+    if (e.key === 'ArrowRight') select({ feature: -1, token: (hover.token + 1 + nt) % nt })
+    else if (e.key === 'ArrowLeft') select({ feature: -1, token: (hover.token - 1 + nt) % nt })
+    else if (e.key === 'ArrowDown') select({ feature: (hover.feature + 1 + nf) % nf, token: -1 })
+    else if (e.key === 'ArrowUp') select({ feature: (hover.feature - 1 + nf) % nf, token: -1 })
+    else if (e.key === 'Escape') select({ feature: -1, token: -1 })
+    else return
+    e.preventDefault()
+  }
+
+  const announce = (() => {
+    if (hover.token >= 0) {
+      const fs = FEATURES.filter((f) => f.fires[hover.token] !== undefined).map((f) => f.label)
+      return `${TOKENS[hover.token]}, token ${hover.token + 1} of ${TOKENS.length}. Features: ${fs.join('; ')}.`
+    }
+    if (hover.feature >= 0) {
+      const f = FEATURES[hover.feature]
+      const toks = Object.keys(f.fires).map((i) => `${TOKENS[i]} ${Math.round(f.fires[i] * 100)}%`)
+      return `${f.label}, feature ${hover.feature + 1} of ${FEATURES.length}. Fires on ${toks.join(', ')}.`
+    }
+    return ''
+  })()
 
   return (
     <div className={s.lens}>
       <div ref={wrap} className={`${s.stage} ${s.stageTall}`}>
         <canvas
           ref={canvas}
+          tabIndex={0}
           role="img"
-          aria-label="Features lens: a ten-token sentence across the top and seventeen sparse features as rows, each with bars under the tokens it fires on."
-          onMouseMove={onMove}
-          onMouseLeave={() => {
-            setHover({ feature: -1, token: -1 })
-            if (reduced) redraw()
+          aria-label="Features lens: a ten-token sentence across the top and seventeen sparse features as rows, each with bars under the tokens it fires on. Left and right arrows move between tokens, up and down between features."
+          onPointerMove={onMove}
+          onPointerLeave={() => select({ feature: -1, token: -1 })}
+          onKeyDown={onKey}
+          onFocus={() => {
+            if (hover.feature < 0 && hover.token < 0) select({ feature: -1, token: 0 })
           }}
+          onBlur={() => select({ feature: -1, token: -1 })}
         />
       </div>
-      <p className={s.hint}>hover a feature to light the tokens it fires on · hover a token to light its features</p>
+      <div className={ui.srOnly} aria-live="polite">
+        {announce}
+      </div>
+      <p className={s.hint}>
+        hover a feature to light the tokens it fires on · hover a token to light its features · arrows from the keyboard
+      </p>
       <p className={ui.caption}>
         <em>Fake:</em> the features, their explanation strings and their activations are written by hand (each token
         carries three to five). <em>Real:</em> the shape of a dictionary-learning readout: sparse features per token,

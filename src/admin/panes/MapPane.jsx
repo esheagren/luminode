@@ -1,7 +1,12 @@
-import { useState } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { CHAPTERS, MOVEMENTS, LENSES, DATA_SOURCES, STATUSES } from '../data/curriculum.js'
+import { createStore, useStore } from '../lib/sessionStore.js'
 import ui from '../ui.module.css'
 import s from './MapPane.module.css'
+
+// Live outside the component so edits survive switching panes (the pane remounts on each tab).
+const editStore = createStore({})
+const statusStore = createStore(Object.fromEntries(CHAPTERS.map((c) => [c.n, c.status])))
 
 const FIELDS = [
   ['claim', 'Claim'],
@@ -16,12 +21,30 @@ const dataLabel = (id) => DATA_SOURCES.find((d) => d.id === id)?.label || id
 
 export default function MapPane() {
   const [selected, setSelected] = useState(null)
-  const [edits, setEdits] = useState({})
-  const [statuses, setStatuses] = useState(() => Object.fromEntries(CHAPTERS.map((c) => [c.n, c.status])))
+  const edits = useStore(editStore)
+  const statuses = useStore(statusStore)
+  const setStatuses = statusStore.set
+  const buttons = useRef({})
+  const noteTitle = useRef(null)
+  const returnTo = useRef(null)
 
   const chapter = CHAPTERS.find((c) => c.n === selected)
   const valueOf = (c, key) => edits[c.n]?.[key] ?? c[key]
-  const edit = (n, key, value) => setEdits((e) => ({ ...e, [n]: { ...(e[n] || {}), [key]: value } }))
+  const edit = (n, key, value) => editStore.set((e) => ({ ...e, [n]: { ...(e[n] || {}), [key]: value } }))
+  const close = () => {
+    returnTo.current = selected
+    setSelected(null)
+  }
+
+  // Focus follows the panel: its heading when a chapter opens, the chapter's button after Close.
+  useEffect(() => {
+    if (selected !== null) {
+      noteTitle.current?.focus()
+    } else if (returnTo.current !== null) {
+      buttons.current[returnTo.current]?.focus()
+      returnTo.current = null
+    }
+  }, [selected])
 
   return (
     <div className={`${s.pane} ${chapter ? s.paneOpen : ''}`}>
@@ -45,8 +68,11 @@ export default function MapPane() {
                 <li key={c.n} className={s.item}>
                   <button
                     type="button"
+                    ref={(el) => {
+                      buttons.current[c.n] = el
+                    }}
                     className={`${s.node} ${selected === c.n ? s.nodeOn : ''}`}
-                    onClick={() => setSelected(selected === c.n ? null : c.n)}
+                    onClick={() => (selected === c.n ? close() : setSelected(c.n))}
                     aria-pressed={selected === c.n}
                   >
                     <span className={s.nodeHead}>
@@ -106,9 +132,11 @@ export default function MapPane() {
           <div className={s.noteHead}>
             <div>
               <span className={s.noteNum}>Chapter {chapter.n}</span>
-              <h2 className={s.noteTitle}>{chapter.title}</h2>
+              <h2 ref={noteTitle} tabIndex={-1} className={s.noteTitle}>
+                {chapter.title}
+              </h2>
             </div>
-            <button type="button" className={`${ui.button} ${ui.buttonQuiet}`} onClick={() => setSelected(null)}>
+            <button type="button" className={`${ui.button} ${ui.buttonQuiet}`} onClick={close}>
               Close
             </button>
           </div>

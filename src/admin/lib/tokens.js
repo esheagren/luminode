@@ -59,16 +59,48 @@ export function readToken(name) {
   return getComputedStyle(root()).getPropertyValue(`--${name}`).trim()
 }
 
+// The value a top-level `:root` rule gives a token, ignoring media overrides (prefers-reduced-motion
+// rewrites the durations) and inline dial writes. Falls back to the computed value.
+function readStylesheetToken(name) {
+  let found = ''
+  try {
+    for (const sheet of document.styleSheets) {
+      let rules
+      try {
+        rules = sheet.cssRules
+      } catch {
+        continue // cross-origin sheet
+      }
+      for (const rule of rules) {
+        if (rule.selectorText !== ':root' || rule.parentRule) continue
+        const v = rule.style.getPropertyValue(`--${name}`).trim()
+        if (v) found = v
+      }
+    }
+  } catch {
+    found = ''
+  }
+  return found || readToken(name)
+}
+
 // Snapshot the stylesheet values once, before any dial has written an inline override.
+// Durations come from the stylesheet rule itself so the snapshot is the committed tempo, not the
+// reduced-motion override.
 export function getCommitted() {
   if (!committed) {
     committed = {}
     ALL_KEYS.forEach((k) => {
-      committed[k] = readToken(k)
+      committed[k] = DURATION_TOKENS.includes(k) ? readStylesheetToken(k) : readToken(k)
     })
     committed['base-size'] = getComputedStyle(root()).fontSize
   }
   return committed
+}
+
+// A duration as dialled or committed, never the reduced-motion override: the inline write if a dial
+// made one, otherwise the committed stylesheet value.
+export function readDuration(name) {
+  return root().style.getPropertyValue(`--${name}`).trim() || getCommitted()[name]
 }
 
 export function setToken(name, value) {
@@ -171,7 +203,8 @@ export function readPalette() {
 export function exportTokensCss() {
   const current = {}
   ALL_KEYS.forEach((k) => {
-    current[k] = readToken(k)
+    // durations normalised to ms: the built stylesheet minifies 500ms to .5s
+    current[k] = DURATION_TOKENS.includes(k) ? `${parseMs(readDuration(k))}ms` : readToken(k)
   })
   const lines = [
     '/* Luminode design tokens. The only place colours, type sizes and durations are defined.',

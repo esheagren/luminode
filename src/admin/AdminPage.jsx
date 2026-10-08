@@ -1,4 +1,6 @@
+import { useEffect } from 'react'
 import { useParams, NavLink } from 'react-router-dom'
+import { resetTokens } from './lib/tokens.js'
 import MapPane from './panes/MapPane.jsx'
 import LensesPane from './panes/LensesPane.jsx'
 import DialsPane from './panes/DialsPane.jsx'
@@ -16,6 +18,9 @@ export default function AdminPage() {
   const { pane } = useParams()
   const current = PANES.find((p) => p.id === pane) || PANES[0]
   const Pane = current.Component
+
+  // Dial overrides are inline custom properties on <html>; drop them when leaving /admin.
+  useEffect(() => () => resetTokens(), [])
 
   return (
     <div className={s.shell}>
