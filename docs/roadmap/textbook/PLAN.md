@@ -26,7 +26,7 @@ Every chapter: **claim** (2–3 sentences) → **performance** (sandbox arrives 
 
 ## Engine decisions
 
-- **Live model:** GPT-2 small (124M) in the browser via transformers.js/ONNX, plus a hand-written JS forward pass for step-through anatomy. Spike result in `spikes/gpt2-browser.md`.
+- **Live model:** GPT-2 small (124M) in the browser via transformers.js 3.8.1 on wasm, q8 (128 MB, ~27 ms per forward pass). Hidden states and attentions are exposed by ONNX graph surgery (`spikes/gpt2-browser/add_probe_outputs.py`); stock exports return only logits. q8 on WebGPU is silently wrong, so WebGPU only with fp32. Plus a hand-written JS forward pass for step-through anatomy. Full results in `spikes/gpt2-browser.md`.
 - **Rich features / steering / attribution:** Gemma-2-2B with Gemma Scope SAEs, computed offline (TransformerLens, SAELens, circuit-tracer) into JSON bundles under `data/`. Neuronpedia for explanations by link.
 - **Part I** keeps Pinecone as is.
 
@@ -34,9 +34,9 @@ Every chapter: **claim** (2–3 sentences) → **performance** (sandbox arrives 
 
 | # | Step | Size | Status |
 |---|---|---|---|
-| 1 | Spike GPT-2 small in the browser (download, latency, memory, hidden states + attentions) | ½ day | started |
-| 2 | Foundation: merge PR #2 content, delete dead code and `.next/`, strip fake styled-jsx, `tokens.css` | 1–2 days | started |
-| 3 | `/admin` design space: curriculum map, lens prototypes, token dials, audit checklist | 2–3 days | started |
+| 1 | Spike GPT-2 small in the browser (download, latency, memory, hidden states + attentions) | ½ day | done: GO (see `spikes/gpt2-browser.md`) |
+| 2 | Foundation: merge PR #2 content, delete dead code and `.next/`, strip fake styled-jsx, `tokens.css` | 1–2 days | done (commit d3836cf) |
+| 3 | `/admin` design space: curriculum map, lens prototypes, token dials, audit checklist | 2–3 days | done, first pass (commit 11c211e) |
 | 4 | Stage: scene model + renderer (Retina, zoom/pan, glow, filaments, halos, collision), Space lens, tools migrated, 3D parity | ~1 week | |
 | 5 | Textbook shell (chapter model with performances as scripted actions), landing Begin/Explore, Part I rewritten | 3–4 days | |
 | 6 | Engine + Part II: GPT-2 in page, Stream + Attention lenses, tokens → forward pass → residual/logit lens → attention → induction | 1.5–2 weeks | |
@@ -52,6 +52,7 @@ Pattern from step 4 on: prototype the lens in `/admin` → build its renderer �
 - 2026-10-07 Erik: current design is stale; keep the landing animation; direction "musical and neurological".
 - 2026-10-08 Erik: broaden to mech interp (features, circuits); textbook over explorer; `/admin` design space.
 - 2026-10-08 Claude recommendation, pending Erik: GPT-2 small live + Gemma precomputed; book linear with Part I skippable.
+- 2026-10-08 Spike: GPT-2 small in browser is GO; the five canonical induction heads rank top 5 of 144 in the browser.
 - Open: serif vs sans for words; sound in scope; rewrite vs refactor 2D renderer (plan assumes rewrite).
 
 ## Working agreements
