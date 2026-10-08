@@ -12,10 +12,8 @@ import { getApiUrl } from '../utils/environment';
 export const findAnalogy = async (word1, word2, word3, numResults = 5) => {
   try {
     const apiUrl = getApiUrl('/api/findAnalogy');
-    console.log(`Sending analogy request to ${apiUrl} with words: ${word1}, ${word2}, ${word3}`);
     
     // Log the environment API URL for debugging
-    console.log('Using API server URL:', getApiUrl(''));
     
     const response = await axios.post(apiUrl, {
       word1,
@@ -26,10 +24,8 @@ export const findAnalogy = async (word1, word2, word3, numResults = 5) => {
     });
     
     if (response && response.data && response.data.data) {
-      console.log('Received analogy response:', response.data);
       return response.data;
     } else {
-      console.error('Invalid response structure:', response.data);
       return { 
         error: 'Invalid response from the server', 
         data: null,
@@ -52,7 +48,6 @@ export const findAnalogy = async (word1, word2, word3, numResults = 5) => {
       }
     };
     
-    console.log('Analogy error details:', errorDetails);
     
     return { 
       error: error.response?.data?.error || error.message || 'Failed to find analogy',

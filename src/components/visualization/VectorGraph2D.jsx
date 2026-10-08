@@ -3,6 +3,7 @@ import { createTooltip, removeTooltip, createSimilarityTooltip } from './VectorT
 import { getPointColor, calculateCosineSimilarity, formatSimilarity } from './VectorUtils';
 import SimpleLoadingAnimation from './SimpleLoadingAnimation';
 import drawAnalogyProjection from './AnalogyProjection';
+import styles from './VectorGraph2D.module.css';
 
 const VectorGraph2D = ({
   coordinates,
@@ -18,6 +19,7 @@ const VectorGraph2D = ({
 }) => {
   const canvasRef = useRef(null);
   const pointsRef = useRef([]);
+  const similarityLabelsRef = useRef([]); // hit-areas of the ruler similarity labels, for hover/click
   const [isLoading, setIsLoading] = useState(true);
   const animationFrameRef = useRef(null);
   const touchStartRef = useRef(null);
@@ -51,17 +53,14 @@ const VectorGraph2D = ({
   // Animation function for the analogy projection
   const animateAnalogyProjection = useCallback(() => {
     if (!canvasRef.current || !pointsRef.current.length) {
-      console.log('Cannot animate: missing canvas or points');
       return;
     }
     
     if (!isSearchingAnalogy || analogyStep !== 3) {
-      console.log('Not in searching state or wrong step:', { isSearchingAnalogy, analogyStep });
       return;
     }
     
     if (selectedPoints.length < 3) {
-      console.log('Not enough selected points for projection');
       return;
     }
     
@@ -72,12 +71,6 @@ const VectorGraph2D = ({
     const point2 = points.find(p => p.word === selectedPoints[1]);
     
     if (!sourcePoint || !point1 || !point2) {
-      console.log('Missing required points for projection', { 
-        hasSourcePoint: !!sourcePoint, 
-        hasPoint1: !!point1, 
-        hasPoint2: !!point2,
-        selectedPoints
-      });
       return;
     }
     
@@ -98,17 +91,10 @@ const VectorGraph2D = ({
   
   // Start or stop projection animation when search state changes
   useEffect(() => {
-    console.log('Analogy search state changed:', { 
-      isSearchingAnalogy, 
-      analogyStep, 
-      selectedPoints
-    });
     
     if (isSearchingAnalogy && analogyStep === 3) {
-      console.log('Starting analogy projection animation');
       animationFrameRef.current = requestAnimationFrame(animateAnalogyProjection);
     } else if (animationFrameRef.current) {
-      console.log('Stopping analogy projection animation');
       cancelAnimationFrame(animationFrameRef.current);
       animationFrameRef.current = null;
     }
@@ -126,10 +112,6 @@ const VectorGraph2D = ({
     
     const resizeCanvas = () => {
       if (!containerRef.current || !canvasRef.current) {
-        console.log('Missing refs:', { 
-          container: !!containerRef.current, 
-          canvas: !!canvasRef.current 
-        });
         return;
       }
       
@@ -137,7 +119,6 @@ const VectorGraph2D = ({
       const width = container.clientWidth;
       const height = container.clientHeight;
       
-      console.log('Canvas dimensions:', { width, height });
       
       // Resize 2D canvas with explicit dimensions
       canvasRef.current.width = width;
@@ -157,7 +138,6 @@ const VectorGraph2D = ({
         drawVisualization(sortedCoordinates);
         setIsLoading(false);
       } else {
-        console.log('No coordinates to draw, clearing graph');
         setIsLoading(false); // Changed from true to false to avoid showing loading animation
         
         // Draw empty state with visible background
@@ -168,8 +148,7 @@ const VectorGraph2D = ({
           ctx.fillRect(0, 0, width, height);
           // Reset any stored point data
           pointsRef.current = [];
-          window.similarityLabels = [];
-          console.log('Graph cleared successfully');
+          similarityLabelsRef.current = [];
         }
       }
     };
@@ -188,10 +167,6 @@ const VectorGraph2D = ({
   
   const drawVisualization = (coordsToRender = coordinates) => {
     if (!coordsToRender.length || !canvasRef.current) {
-      console.log('Cannot draw visualization:', { 
-        hasCoordinates: coordsToRender.length > 0,
-        hasCanvas: !!canvasRef.current
-      });
       return;
     }
     
@@ -199,11 +174,9 @@ const VectorGraph2D = ({
     const ctx = canvas.getContext('2d');
     
     if (!ctx) {
-      console.error('Failed to get 2D context from canvas');
       return;
     }
     
-    console.log('Drawing 2D visualization with', coordsToRender.length, 'points');
     
     // Clear the canvas with a visible background color
     ctx.fillStyle = '#1a1a2e'; // Dark blue background
@@ -239,11 +212,6 @@ const VectorGraph2D = ({
       const isAnalogy = point.isAnalogy === true;
       const isSelected = selectedPoints.includes(point.word);
       
-      // Log for debugging the first time we process an analogy point
-      if (isAnalogy && !window.loggedAnalogy) {
-        console.log('Processing analogy point:', point);
-        window.loggedAnalogy = true;
-      }
       
       // Determine radius based on point type
       // Increase radius by 1.3x on mobile for easier touch selection
@@ -421,16 +389,6 @@ const VectorGraph2D = ({
         const point2 = primaryPoints[j];
         
         // Debug point info
-        console.log('Ruler point data:', {
-          point1: {
-            word: point1.word,
-            hasVector: !!point1.truncatedVector
-          },
-          point2: {
-            word: point2.word,
-            hasVector: !!point2.truncatedVector
-          }
-        });
         
         // Draw line between points
         ctx.beginPath();
@@ -447,19 +405,10 @@ const VectorGraph2D = ({
         const vec1 = extractVector(point1.truncatedVector, point1);
         const vec2 = extractVector(point2.truncatedVector, point2);
         
-        // Log vector extraction results
-        console.log('Extracted vectors:', {
-          vec1: vec1 ? `${vec1.length} elements` : 'null',
-          vec2: vec2 ? `${vec2.length} elements` : 'null'
-        });
-        
         // Calculate similarity only if we have valid vectors
         let distance = null;
         if (vec1 && vec2) {
           distance = calculateCosineSimilarity(vec1, vec2);
-          console.log('Calculated similarity:', distance);
-        } else {
-          console.log('Cannot calculate similarity: missing vectors');
         }
         
         // Draw distance label at midpoint of line
@@ -503,7 +452,7 @@ const VectorGraph2D = ({
     }
     
     // Store the similarity labels in a ref to access in mouse events
-    window.similarityLabels = similarityLabels;
+    similarityLabelsRef.current = similarityLabels;
   };
   
   // Function to draw analogy lines between points
@@ -627,18 +576,15 @@ const VectorGraph2D = ({
     const midpointPoints = points.filter(point => point.isMidpoint);
     
     // Debug midpoint points
-    console.log('Midpoint points for visualization:', midpointPoints);
     
     // Early return if no midpoint points
     if (midpointPoints.length === 0) {
-      console.log('No midpoint points found in the visualization data');
       return;
     }
     
     // Draw connections for each midpoint point
     midpointPoints.forEach(midpointPoint => {
       if (!midpointPoint.midpointSource || !midpointPoint.midpointSource.fromWords) {
-        console.log('Midpoint point missing source or fromWords:', midpointPoint);
         return;
       }
       
@@ -721,7 +667,6 @@ const VectorGraph2D = ({
     
     // We need at least the start and end points
     if (!startPoint || !endPoint) {
-      console.error("Slice path missing start or end point.", { startPoint, endPoint });
       return; // Cannot draw path without endpoints
     }
     
@@ -1091,7 +1036,7 @@ const VectorGraph2D = ({
     const mouseY = e.clientY - rect.top;
     
     // Check if mouse is over any similarity label first (prioritize these)
-    const similarityLabels = window.similarityLabels || [];
+    const similarityLabels = similarityLabelsRef.current;
     let hoveredLabel = null;
     
     for (const label of similarityLabels) {
@@ -1163,12 +1108,6 @@ const VectorGraph2D = ({
     // If in selection or analogy mode, use the selection callback
     if ((selectionMode || analogyMode) && onPointSelected) {
       if (clickedPoint) {
-        console.log('Selected point:', clickedPoint.word, {
-          selectionMode,
-          analogyMode,
-          analogyStep,
-          selectedWords: selectedPoints
-        });
         onPointSelected(clickedPoint.word);
       }
       return;
@@ -1246,7 +1185,6 @@ const VectorGraph2D = ({
       // Check if in selection or analogy mode
       if ((selectionMode || analogyMode) && onPointSelected) {
         if (tappedPoint) {
-          console.log('Touch selected point:', tappedPoint.word);
           onPointSelected(tappedPoint.word);
         }
       } else {
@@ -1278,7 +1216,7 @@ const VectorGraph2D = ({
       ) : (
         <canvas
           ref={canvasRef}
-          className="vector-canvas"
+          className={styles.vectorCanvas}
           onMouseMove={handleMouseMove}
           onMouseLeave={handleMouseLeave}
           onClick={handleClick}
@@ -1289,138 +1227,30 @@ const VectorGraph2D = ({
 
       {/* Pinned point info card */}
       {pinnedPoint && (
-        <div className="pinned-point-card">
-          <div className="pinned-point-header">
-            <span className="pinned-point-word">{pinnedPoint.word}</span>
+        <div className={styles.pinnedPointCard}>
+          <div className={styles.pinnedPointHeader}>
+            <span className={styles.pinnedPointWord}>{pinnedPoint.word}</span>
             <button
-              className="pinned-point-close"
+              className={styles.pinnedPointClose}
               onClick={() => setPinnedPoint(null)}
               aria-label="Close"
             >
               ×
             </button>
           </div>
-          <div className="pinned-point-info">
-            {pinnedPoint.isPrimary && <span className="pinned-point-badge primary">Primary</span>}
-            {pinnedPoint.isAnalogy && <span className="pinned-point-badge analogy">Analogy Result</span>}
-            {pinnedPoint.isContextSample && <span className="pinned-point-badge context">Context</span>}
-            {pinnedPoint.isMidpoint && <span className="pinned-point-badge midpoint">Midpoint</span>}
-            {pinnedPoint.isSlice && <span className="pinned-point-badge slice">Slice</span>}
+          <div className={styles.pinnedPointInfo}>
+            {pinnedPoint.isPrimary && <span className={`${styles.pinnedPointBadge} ${styles.primary}`}>Primary</span>}
+            {pinnedPoint.isAnalogy && <span className={`${styles.pinnedPointBadge} ${styles.analogy}`}>Analogy Result</span>}
+            {pinnedPoint.isContextSample && <span className={`${styles.pinnedPointBadge} ${styles.context}`}>Context</span>}
+            {pinnedPoint.isMidpoint && <span className={`${styles.pinnedPointBadge} ${styles.midpoint}`}>Midpoint</span>}
+            {pinnedPoint.isSlice && <span className={`${styles.pinnedPointBadge} ${styles.slice}`}>Slice</span>}
           </div>
           {pinnedPoint.truncatedVector && (
-            <div className="pinned-point-vector">
-              <span className="vector-label">Vector:</span>
-              <span className="vector-value">{pinnedPoint.truncatedVector}</span>
+            <div className={styles.pinnedPointVector}>
+              <span className={styles.vectorLabel}>Vector:</span>
+              <span className={styles.vectorValue}>{pinnedPoint.truncatedVector}</span>
             </div>
           )}
-          <style jsx="true">{`
-            .pinned-point-card {
-              position: absolute;
-              bottom: 16px;
-              left: 16px;
-              background: rgba(15, 23, 42, 0.95);
-              border: 1px solid rgba(255, 255, 255, 0.2);
-              border-radius: 12px;
-              padding: 12px 16px;
-              min-width: 200px;
-              max-width: 320px;
-              box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
-              z-index: 100;
-              backdrop-filter: blur(8px);
-            }
-
-            .pinned-point-header {
-              display: flex;
-              justify-content: space-between;
-              align-items: center;
-              margin-bottom: 8px;
-            }
-
-            .pinned-point-word {
-              font-size: 18px;
-              font-weight: 600;
-              color: #f8fafc;
-            }
-
-            .pinned-point-close {
-              background: none;
-              border: none;
-              color: #94a3b8;
-              font-size: 20px;
-              cursor: pointer;
-              padding: 0 4px;
-              line-height: 1;
-              transition: color 0.2s;
-            }
-
-            .pinned-point-close:hover {
-              color: #f8fafc;
-            }
-
-            .pinned-point-info {
-              display: flex;
-              flex-wrap: wrap;
-              gap: 6px;
-              margin-bottom: 8px;
-            }
-
-            .pinned-point-badge {
-              font-size: 11px;
-              padding: 2px 8px;
-              border-radius: 10px;
-              font-weight: 500;
-            }
-
-            .pinned-point-badge.primary {
-              background: rgba(255, 157, 66, 0.2);
-              color: #FF9D42;
-            }
-
-            .pinned-point-badge.analogy {
-              background: rgba(156, 39, 176, 0.2);
-              color: #ce93d8;
-            }
-
-            .pinned-point-badge.context {
-              background: rgba(100, 116, 139, 0.2);
-              color: #94a3b8;
-            }
-
-            .pinned-point-badge.midpoint {
-              background: rgba(52, 168, 83, 0.2);
-              color: #4ade80;
-            }
-
-            .pinned-point-badge.slice {
-              background: rgba(142, 68, 173, 0.2);
-              color: #c084fc;
-            }
-
-            .pinned-point-vector {
-              font-size: 12px;
-              color: #94a3b8;
-              word-break: break-all;
-            }
-
-            .vector-label {
-              color: #64748b;
-              margin-right: 4px;
-            }
-
-            .vector-value {
-              font-family: monospace;
-            }
-
-            @media (max-width: 480px) {
-              .pinned-point-card {
-                bottom: 8px;
-                left: 8px;
-                right: 8px;
-                max-width: none;
-                min-width: auto;
-              }
-            }
-          `}</style>
         </div>
       )}
     </>

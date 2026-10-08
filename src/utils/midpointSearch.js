@@ -20,7 +20,6 @@ export const findMidpoints = async (word1, word2, recursionDepth = 0, serverUrl)
       throw new Error('Recursion depth must be between 0 and 2');
     }
     
-    console.log(`Finding midpoints between "${word1}" and "${word2}" with depth ${recursionDepth}`);
     
     // Call API to find the midpoint and nearest word
     const response = await axios.post(`${serverUrl}/api/findMidpoint`, {

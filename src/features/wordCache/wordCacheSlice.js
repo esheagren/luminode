@@ -10,11 +10,9 @@ export const fetchWordData = createAsyncThunk(
     const { wordCache } = getState();
     // Check cache first
     if (wordCache.data[word]) {
-      // console.log(`[Cache] Hit for \"${word}\"`);
       return { word, data: wordCache.data[word], fromCache: true };
     }
 
-    // console.log(`[Cache] Miss for \"${word}\", fetching...`);
     try {
       const response = await axios.post(getApiUrl('/api/checkWord'), { word });
       if (response.data && response.data.success) {

@@ -19,22 +19,14 @@ export const findSlice = async (
   const apiUrl = getApiUrl('/api/findSlice');
 
   try {
-    console.log(`Finding slice between "${word1}" and "${word2}"`);
     
     // Validate input
     if (!word1 || !word2) {
-      console.error('Missing required parameters:', { word1, word2 });
       throw new Error('Both words are required for slice calculation');
     }
     
-    console.log('API URL:', apiUrl);
     
     // Log detailed request information for debugging
-    console.log('Sending request with data:', {
-      url: apiUrl,
-      method: 'POST',
-      data: { word1, word2, numResults, maxDepth }
-    });
     
     const response = await axios.post(apiUrl, {
       word1,
@@ -44,11 +36,9 @@ export const findSlice = async (
     });
     
     if (response.data && response.data.data) {
-      console.log('Slice API response:', response.data);
       return response.data.data;
     }
     
-    console.error('Invalid API response:', response.data);
     throw new Error('Invalid response from server');
   } catch (error) {
     console.error('Error finding slice:', error);
@@ -191,6 +181,5 @@ export const processSliceResults = (results, word1, word2) => {
     });
   }
   
-  console.log("Processed slice results:", sliceCluster);
   return sliceCluster;
 }; 

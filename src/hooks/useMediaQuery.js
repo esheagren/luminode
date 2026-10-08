@@ -20,4 +20,3 @@ export const useMediaQuery = (query) => {
 };
 
 export const useIsMobile = () => useMediaQuery('(max-width: 480px)');
-export const useIsTablet = () => useMediaQuery('(max-width: 768px)');

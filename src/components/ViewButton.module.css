@@ -1,0 +1,36 @@
+.view-toggle-compact {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  color: #ccc;
+  border: none;
+  padding: 0.5rem 0.75rem;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  gap: 0.25rem;
+}
+
+.view-toggle-compact:hover {
+  background: rgba(255, 255, 255, 0.05);
+  color: white;
+}
+
+.view-toggle {
+  padding: 0.4rem 0.75rem;
+  border-radius: 16px;
+  border: none;
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  color: white;
+  background: linear-gradient(135deg, #FFC837 0%, #FF8008 100%);
+}
+
+.view-toggle:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 5px rgba(255, 136, 8, 0.4);
+}

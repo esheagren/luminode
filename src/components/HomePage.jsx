@@ -7,12 +7,11 @@ import Tools from './Tools';
 import ViewButton from './ViewButton';
 import SuggestedWords from './SuggestedWords';
 import { Link, useLocation } from 'react-router-dom';
-import { hasPrecomputedEmbedding } from '../data/wordEmbeddings';
 import LearnPanel from './learn-panel/LearnPanel';
 import IntroModal from './IntroModal';
 import luminodeLogo from '../assets/luminodeLogoSmall.png';
-import HamburgerMenu from './common/HamburgerMenu';
 import { useIsMobile } from '../hooks/useMediaQuery';
+import styles from './HomePage.module.css';
 
 // Add reset icon component
 const ResetIcon = () => (
@@ -28,7 +27,7 @@ const HomePage = () => {
   const [relatedClusters, setRelatedClusters] = useState([]);
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [numNeighbors] = useState(5); // Default to 5 neighbors
+  const numNeighbors = 5; // Default number of neighbours/midpoints requested
   const [viewMode, setViewMode] = useState('2D'); // Default to 2D view
   const [rulerActive, setRulerActive] = useState(false);
   const [selectionMode, setSelectionMode] = useState(false);
@@ -106,22 +105,10 @@ const HomePage = () => {
       const updatedWords = [...words, word];
       setWords(updatedWords);
       
-      // Check if we have a pre-computed embedding
-      if (hasPrecomputedEmbedding(word)) {
-        return;
-      }
-      
-      // If no pre-computed embedding, fetch via Redux thunk
       setError(null);
 
-      console.log(`[HomePage] Dispatching fetchWordData for: ${word}`);
       dispatch(fetchWordData(word))
         .unwrap()
-        .then((result) => {
-          if (!result.data.exists) {
-            console.warn(`Word "${word}" added but not found in embeddings.`);
-          }
-        })
         .catch((fetchError) => {
           console.error('[HomePage] Error fetching word data via thunk:', fetchError);
           setError(fetchError.error || 'Failed to check word existence.');
@@ -132,31 +119,19 @@ const HomePage = () => {
   // Handle point selection from the graph
   const handlePointSelected = (word) => {
     if (!selectionMode && !analogyMode && !sliceMode && !linearPathMode && !greedyPathMode && !projectionMode) {
-      console.log('Point selection ignored - not in any selection mode:', word);
       return;
     }
 
-    console.log('Point selected:', word, {
-      analogyMode,
-      selectionMode,
-      sliceMode,
-      linearPathMode,
-      greedyPathMode,
-      analogyStep,
-      currentSelectedPoints: selectedPoints
-    });
     
     if (analogyMode) {
       // Analogy mode selection logic
       if (selectedPoints.includes(word)) {
-        console.log('Word already selected, showing error:', word);
         setError("Each word can only be used once in an analogy");
         return; // Already selected
       }
       
       // We need at most 3 words for analogy
       if (selectedPoints.length >= 3) {
-        console.log('Already have 3 words, ignoring:', word);
         return;
       }
       
@@ -164,17 +139,11 @@ const HomePage = () => {
       if (error) setError(null);
       
       // Add the new word to selected points
-      console.log('Adding word to analogy selection:', word);
       const newSelection = [...selectedPoints, word];
       setSelectedPoints(newSelection);
       
       // Log immediately after setting
       setTimeout(() => {
-        console.log('Updated selection after adding:', {
-          newSelection,
-          currentState: selectedPoints,
-          analogyStep
-        });
       }, 0);
       
       return;
@@ -259,7 +228,6 @@ const HomePage = () => {
 
   // Handle Reset functionality
   const handleReset = () => {
-    console.log('Resetting all words and visualization');
     
     // Clear all words
     setWords([]);
@@ -312,9 +280,9 @@ const HomePage = () => {
   // Mobile-specific layout: Graph on top, input at bottom
   if (isMobile) {
     return (
-      <div className="mobile-app-container">
+      <div className={styles.mobileAppContainer}>
         {/* Graph area - takes most of the screen */}
-        <div className="mobile-graph-area">
+        <div className={styles.mobileGraphArea}>
           <VectorGraph
             words={words}
             midpointWords={relatedClusters}
@@ -330,7 +298,7 @@ const HomePage = () => {
           />
 
           {/* Floating 2D/3D toggle */}
-          <div className="mobile-view-toggle">
+          <div className={styles.mobileViewToggle}>
             <ViewButton
               viewMode={viewMode}
               setViewMode={setViewMode}
@@ -340,7 +308,7 @@ const HomePage = () => {
 
           {/* Floating info button for sidebar */}
           <button
-            className="mobile-info-button"
+            className={styles.mobileInfoButton}
             onClick={() => setSidebarOpen(true)}
             aria-label="Open menu"
           >
@@ -354,13 +322,13 @@ const HomePage = () => {
 
         {/* Selected words bar - shows current words */}
         {words.length > 0 && (
-          <div className="mobile-words-bar">
-            <div className="mobile-words-scroll">
+          <div className={styles.mobileWordsBar}>
+            <div className={styles.mobileWordsScroll}>
               {words.map((word, index) => (
-                <div key={`word-${index}`} className="mobile-word-tag">
+                <div key={`word-${index}`} className={styles.mobileWordTag}>
                   {word}
                   <button
-                    className="mobile-remove-word"
+                    className={styles.mobileRemoveWord}
                     onClick={() => {
                       const newWords = [...words];
                       newWords.splice(index, 1);
@@ -377,7 +345,7 @@ const HomePage = () => {
               ))}
             </div>
             <button
-              className="mobile-reset-btn"
+              className={styles.mobileResetBtn}
               onClick={handleReset}
               title="Reset all"
             >
@@ -388,13 +356,13 @@ const HomePage = () => {
 
         {/* Error message */}
         {error && (
-          <div className="mobile-error">
+          <div className={styles.mobileError}>
             {error}
           </div>
         )}
 
         {/* Tools bar - always visible */}
-        <div className="mobile-tools-bar">
+        <div className={styles.mobileToolsBar}>
           <Tools
             words={words}
             numMidpoints={numNeighbors}
@@ -432,8 +400,8 @@ const HomePage = () => {
         </div>
 
         {/* Bottom input bar */}
-        <div className="mobile-bottom-bar">
-          <div className="mobile-input-row">
+        <div className={styles.mobileBottomBar}>
+          <div className={styles.mobileInputRow}>
             <WordInput
               words={words}
               setWords={setWords}
@@ -455,24 +423,24 @@ const HomePage = () => {
 
         {/* Slide-out sidebar for full options */}
         <div
-          className={`mobile-sidebar-overlay ${sidebarOpen ? 'visible' : ''}`}
+          className={`${styles.mobileSidebarOverlay} ${sidebarOpen ? styles.visible : ''}`}
           onClick={() => setSidebarOpen(false)}
         />
-        <div className={`mobile-sidebar ${sidebarOpen ? 'open' : ''}`}>
-          <div className="mobile-sidebar-header">
-            <Link to="/" className="mobile-logo-link">
+        <div className={`${styles.mobileSidebar} ${sidebarOpen ? styles.open : ''}`}>
+          <div className={styles.mobileSidebarHeader}>
+            <Link to="/" className={styles.mobileLogoLink}>
               <img src={luminodeLogo} alt="Luminode" />
               <span>Luminode</span>
             </Link>
             <button
-              className="mobile-close-sidebar"
+              className={styles.mobileCloseSidebar}
               onClick={() => setSidebarOpen(false)}
             >
               ×
             </button>
           </div>
 
-          <div className="mobile-sidebar-content">
+          <div className={styles.mobileSidebarContent}>
             <h3>All Suggested Words</h3>
             <SuggestedWords
               onWordSelect={(word) => {
@@ -484,7 +452,7 @@ const HomePage = () => {
             />
           </div>
 
-          <div className="mobile-sidebar-footer">
+          <div className={styles.mobileSidebarFooter}>
             <a href="https://eriksheagren.notion.site" target="_blank" rel="noopener noreferrer">
               Contact
             </a>
@@ -496,7 +464,7 @@ const HomePage = () => {
 
         {/* Learn panel as modal on mobile */}
         {learnMode && (
-          <div className="mobile-learn-modal">
+          <div className={styles.mobileLearnModal}>
             <LearnPanel
               activeTool={activeTool}
               onClose={() => setLearnMode(false)}
@@ -510,266 +478,23 @@ const HomePage = () => {
           onClose={handleCloseIntroModal}
         />
 
-        <style jsx="true">{`
-          .mobile-app-container {
-            display: flex;
-            flex-direction: column;
-            height: 100vh;
-            height: 100dvh;
-            background-color: #0f0f10;
-            overflow: hidden;
-          }
-
-          .mobile-graph-area {
-            flex: 1;
-            position: relative;
-            min-height: 0;
-            overflow: hidden;
-          }
-
-          .mobile-graph-area > div:first-child {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-          }
-
-          .mobile-view-toggle {
-            position: absolute;
-            top: 12px;
-            right: 12px;
-            z-index: 100;
-            background: rgba(15, 15, 16, 0.9);
-            border-radius: 8px;
-            padding: 4px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-          }
-
-          .mobile-info-button {
-            position: absolute;
-            top: 12px;
-            left: 12px;
-            z-index: 100;
-            width: 44px;
-            height: 44px;
-            background: rgba(15, 15, 16, 0.9);
-            border: none;
-            border-radius: 50%;
-            color: #FF9D42;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-          }
-
-          .mobile-words-bar {
-            display: flex;
-            align-items: center;
-            padding: 8px 12px;
-            background: #1a1a1c;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            gap: 8px;
-          }
-
-          .mobile-words-scroll {
-            flex: 1;
-            display: flex;
-            gap: 6px;
-            overflow-x: auto;
-            -webkit-overflow-scrolling: touch;
-            scrollbar-width: none;
-          }
-
-          .mobile-words-scroll::-webkit-scrollbar {
-            display: none;
-          }
-
-          .mobile-word-tag {
-            display: flex;
-            align-items: center;
-            background: #2a2a2c;
-            border-radius: 14px;
-            padding: 4px 10px;
-            font-size: 0.85rem;
-            white-space: nowrap;
-            flex-shrink: 0;
-          }
-
-          .mobile-remove-word {
-            background: none;
-            border: none;
-            color: #FF5757;
-            margin-left: 6px;
-            cursor: pointer;
-            font-size: 1rem;
-            padding: 0;
-            line-height: 1;
-          }
-
-          .mobile-reset-btn {
-            width: 36px;
-            height: 36px;
-            background: none;
-            border: none;
-            color: #ff5757;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
-          }
-
-          .mobile-error {
-            padding: 8px 12px;
-            background: rgba(255, 87, 87, 0.1);
-            color: #FF5757;
-            font-size: 0.8rem;
-            text-align: center;
-          }
-
-          .mobile-tools-bar {
-            background: #0f0f10;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            overflow-x: auto;
-            -webkit-overflow-scrolling: touch;
-          }
-
-          .mobile-bottom-bar {
-            background: #0f0f10;
-            padding: 6px 10px;
-            padding-bottom: max(6px, env(safe-area-inset-bottom));
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-          }
-
-          .mobile-input-row {
-            margin-bottom: 6px;
-          }
-
-          /* Mobile sidebar */
-          .mobile-sidebar-overlay {
-            position: fixed;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.6);
-            z-index: 999;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.3s ease;
-          }
-
-          .mobile-sidebar-overlay.visible {
-            opacity: 1;
-            pointer-events: auto;
-          }
-
-          .mobile-sidebar {
-            position: fixed;
-            top: 0;
-            left: -100%;
-            width: 85vw;
-            max-width: 320px;
-            height: 100%;
-            background: #0f0f10;
-            z-index: 1000;
-            transition: left 0.3s ease;
-            display: flex;
-            flex-direction: column;
-          }
-
-          .mobile-sidebar.open {
-            left: 0;
-          }
-
-          .mobile-sidebar-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 16px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-          }
-
-          .mobile-logo-link {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            text-decoration: none;
-            color: #f8fafc;
-            font-weight: 600;
-            font-size: 1.2rem;
-          }
-
-          .mobile-logo-link img {
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-          }
-
-          .mobile-close-sidebar {
-            width: 44px;
-            height: 44px;
-            background: none;
-            border: none;
-            color: #aaa;
-            font-size: 1.5rem;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-          }
-
-          .mobile-sidebar-content {
-            flex: 1;
-            padding: 16px;
-            overflow-y: auto;
-          }
-
-          .mobile-sidebar-content h3 {
-            color: #888;
-            font-size: 0.8rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 12px;
-          }
-
-          .mobile-sidebar-footer {
-            padding: 16px;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            display: flex;
-            gap: 24px;
-          }
-
-          .mobile-sidebar-footer a {
-            color: rgba(217, 175, 93, 0.75);
-            text-decoration: none;
-            font-size: 0.9rem;
-          }
-
-          /* Mobile learn modal */
-          .mobile-learn-modal {
-            position: fixed;
-            inset: 0;
-            z-index: 1001;
-            background: #0f0f10;
-          }
-        `}</style>
       </div>
     );
   }
 
   // Desktop/Tablet layout
   return (
-    <div className="app-container">
-      <div className="main-layout">
-        <div id="mobile-sidebar" className={`sidebar`}>
-          <div className="logo-container">
-            <Link to="/" className="logo-link">
+    <div className={styles.appContainer}>
+      <div className={styles.mainLayout}>
+        <div id="mobile-sidebar" className={styles.sidebar}>
+          <div className={styles.logoContainer}>
+            <Link to="/" className={styles.logoLink}>
               <img src={luminodeLogo} alt="Luminode" />
-              <span className="logo-text">Luminode</span>
+              <span className={styles.logoText}>Luminode</span>
             </Link>
           </div>
 
-          <div className="input-wrapper">
+          <div className={styles.inputWrapper}>
             <WordInput
               words={words}
               setWords={setWords}
@@ -779,7 +504,7 @@ const HomePage = () => {
               showWordTags={false}
             />
             <button
-              className="reset-button"
+              className={styles.resetButton}
               onClick={handleReset}
               title="Reset words"
             >
@@ -787,14 +512,14 @@ const HomePage = () => {
             </button>
           </div>
 
-          <div className="words-container">
+          <div className={styles.wordsContainer}>
             {words.length > 0 && (
-              <div className="selected-words">
+              <div className={styles.selectedWords}>
                 {words.map((word, index) => (
-                  <div key={`word-${index}`} className="word-tag">
+                  <div key={`word-${index}`} className={styles.wordTag}>
                     {word}
                     <button
-                      className="remove-word"
+                      className={styles.removeWord}
                       onClick={() => {
                         const newWords = [...words];
                         newWords.splice(index, 1);
@@ -814,12 +539,12 @@ const HomePage = () => {
           </div>
 
           {error && (
-            <div className="error-message">
+            <div className={styles.errorMessage}>
               {error}
             </div>
           )}
 
-          <div className="suggestions-section">
+          <div className={styles.suggestionsSection}>
             <SuggestedWords
               onWordSelect={handleWordSelect}
               currentWords={words}
@@ -828,8 +553,8 @@ const HomePage = () => {
           </div>
         </div>
 
-        <div className="content-area">
-          <div className="tools-bar">
+        <div className={styles.contentArea}>
+          <div className={styles.toolsBar}>
             <Tools
               words={words}
               numMidpoints={numNeighbors}
@@ -865,8 +590,8 @@ const HomePage = () => {
             />
           </div>
 
-          <div className={`graph-and-learn-container ${learnMode ? 'with-learn-panel' : ''}`}>
-            <div className={`graph-area ${learnMode ? 'with-learn-panel' : ''}`}>
+          <div className={`${styles.graphAndLearnContainer} ${learnMode ? styles.withLearnPanel : ''}`}>
+            <div className={`${styles.graphArea} ${learnMode ? styles.withLearnPanel : ''}`}>
               <VectorGraph
                 words={words}
                 midpointWords={relatedClusters}
@@ -883,7 +608,7 @@ const HomePage = () => {
             </div>
 
             {learnMode && (
-              <div className="learn-panel-container">
+              <div className={styles.learnPanelContainer}>
                 <LearnPanel
                   activeTool={activeTool}
                   onClose={() => setLearnMode(false)}
@@ -901,8 +626,8 @@ const HomePage = () => {
       />
 
       {/* Footer Links */}
-      <footer className="home-footer">
-        <div className="footer-links">
+      <footer className={styles.homeFooter}>
+        <div className={styles.footerLinks}>
           <a href="https://eriksheagren.notion.site" target="_blank" rel="noopener noreferrer">
             Contact
           </a>
@@ -912,275 +637,6 @@ const HomePage = () => {
         </div>
       </footer>
       
-      <style jsx="true">{`
-        .app-container {
-          display: flex;
-          flex-direction: column;
-          height: calc(100vh - 10px); /* Reduced from 80px to 40px to extend content area */
-        }
-        
-        .header {
-          padding: 1rem;
-        }
-        
-        .main-layout {
-          display: flex;
-          flex: 1;
-          overflow: hidden;
-          margin-bottom: 0; /* Remove any bottom margin */
-        }
-
-        .logo-container {
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          margin-bottom: 0.5rem; /* Reduced from 1rem to bring elements closer */
-          padding-top: 0.25rem; /* Reduced top padding to bring it up */
-          padding-bottom: 0.25rem;
-        }
-
-        .logo-link {
-          display: flex;
-          align-items: center;
-          justify-content: center; /* Center the logo and text */
-          text-decoration: none;
-          color: #f8fafc;
-          pointer-events: auto;
-          cursor: pointer;
-        }
-
-        .logo-container img {
-          height: 40px;
-          width: 40px;
-          border-radius: 50%;
-          margin-right: 10px;
-          object-fit: cover;
-        }
-
-        .logo-text {
-          font-size: 1.4rem;
-          font-weight: 600;
-          color: rgba(248, 250, 252, 0.7);
-          letter-spacing: 0.5px;
-        }
-        
-        .input-wrapper {
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          position: relative;
-          width: 100%;
-          margin-top: 10px;
-          margin-bottom: 10px;
-        }
-        
-        .reset-button {
-          position: static;
-          margin-left: 10px;
-          background: none;
-          border: none;
-          color: #ff5757;
-          cursor: pointer;
-          padding: 8px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          transition: all 0.2s ease;
-          border-radius: 50%;
-          transform: none;
-          height: 38px;
-          width: 38px;
-          margin-top: -25px; /* Fine-tune: move up a bit more */
-        }
-        
-        .reset-button:hover {
-          background-color: rgba(255, 87, 87, 0.1);
-          transform: scale(1.1);
-        }
-        
-        .sidebar {
-          width: 300px;
-          padding: 0.75rem 1rem; /* Reduced top padding to bring elements up */
-          overflow-y: auto;
-          background-color: #0f0f10;
-          display: flex;
-          flex-direction: column;
-          gap: 0.5rem; /* Reduced from 0.75rem to bring elements closer */
-          height: 100%; /* Ensure full height */
-          border: none;
-        }
-        
-        .words-container {
-          max-height: 600px; /* Significantly increased to allow for many more words */
-          overflow-y: auto;
-          margin-bottom: 0.5rem;
-          flex-shrink: 0; /* Prevent container from shrinking */
-          overflow-x: hidden;
-        }
-        
-        /* Custom scrollbar styling */
-        .words-container::-webkit-scrollbar {
-          width: 6px;
-        }
-        
-        .words-container::-webkit-scrollbar-track {
-          background: transparent; 
-        }
-        
-        .words-container::-webkit-scrollbar-thumb {
-          background: rgba(255, 255, 255, 0.2);
-          border-radius: 3px;
-        }
-        
-        .words-container::-webkit-scrollbar-thumb:hover {
-          background: rgba(255, 255, 255, 0.3);
-        }
-        
-        .selected-words {
-          display: flex;
-          flex-wrap: wrap;
-          gap: 0.5rem;
-        }
-        
-        .word-tag {
-          display: inline-flex;
-          align-items: center;
-          background-color: #2a2a2c;
-          border-radius: 16px;
-          padding: 0.25rem 0.75rem;
-          font-size: 0.9rem;
-        }
-        
-        .remove-word {
-          background: none;
-          border: none;
-          color: #FF5757;
-          margin-left: 0.5rem;
-          cursor: pointer;
-          font-size: 1rem;
-          padding: 0;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-        }
-        
-        .error-message {
-          color: #FF5757;
-          padding: 0.25rem 0.5rem;
-          background-color: rgba(255, 87, 87, 0.1);
-          border-radius: 4px;
-          margin-top: 0.25rem;
-          font-size: 0.8rem;
-          max-height: 60px;
-          overflow-y: auto;
-          flex-shrink: 0; /* Prevent error message from shrinking */
-        }
-        
-        .suggestions-section {
-          margin-top: auto; /* Push to bottom */
-          padding-top: 1rem;
-          border-top: 1px solid rgba(255, 255, 255, 0.1);
-        }
-        
-        .content-area {
-          flex: 1;
-          display: flex;
-          flex-direction: column;
-          overflow: hidden;
-        }
-        
-        .tools-bar {
-          padding: 0;
-          background-color: #0f0f10;
-          margin-bottom: 5px; /* Reduced from 10px to 5px */
-        }
-        
-        .graph-and-learn-container {
-          display: flex;
-          flex: 1;
-          position: relative;
-          overflow: hidden;
-          transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
-        }
-        
-        .graph-area {
-          flex: 1;
-          min-height: 500px;
-          position: relative;
-          overflow: hidden;
-          padding-bottom: 0; /* Ensure no padding at bottom */
-          transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
-        }
-        
-        .graph-area > div {
-          position: absolute;
-          top: 0;
-          left: 0;
-          width: 100%;
-          height: 100%;
-        }
-        
-        .graph-area.with-learn-panel {
-          flex: 2; /* Change from 3 to 2 to give the learn panel more space */
-        }
-        
-        .learn-panel-container {
-          flex: 1; /* Keep this as is - now it will take up 1/3 of the space instead of 1/4 */
-          height: 100%;
-          padding-left: 10px;
-          overflow: hidden;
-          transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
-        }
-        
-        .home-footer {
-          width: 100%;
-          padding: 0.8rem 1.5rem;
-          display: flex;
-          justify-content: flex-start;
-          background-color: #0f0f10;
-          border-top: 1px solid rgba(255, 255, 255, 0.1);
-          z-index: 10;
-        }
-        
-        .footer-links {
-          display: flex;
-          gap: 2rem;
-        }
-        
-        .footer-links a {
-          color: rgba(217, 175, 93, 0.75); /* Muted gold color */
-          text-decoration: none;
-          font-size: 0.9rem;
-          font-weight: 400;
-          letter-spacing: 0.5px;
-          transition: color 0.2s ease;
-          font-family: 'Inter', sans-serif;
-        }
-        
-        .footer-links a:hover {
-          color: rgba(217, 175, 93, 0.9); /* Slightly brighter on hover */
-        }
-
-        /* Tablet styles */
-        @media (max-width: 768px) {
-          .sidebar {
-            width: 260px;
-            min-width: 260px;
-          }
-
-          .graph-area {
-            min-height: 400px;
-          }
-
-          .words-container {
-            max-height: 45vh;
-          }
-
-          .home-footer {
-            padding: 0.6rem 1rem;
-          }
-        }
-      `}</style>
     </div>
   );
 };

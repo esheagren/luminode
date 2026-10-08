@@ -1,0 +1,125 @@
+.compact-suggestions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  padding: 2px 0;
+}
+
+.compact-suggestions::-webkit-scrollbar {
+  display: none;
+}
+
+.compact-word {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 12px;
+  padding: 4px 10px;
+  font-size: 12px;
+  color: #ccc;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.compact-word:hover, .compact-word:active {
+  background: rgba(255, 157, 66, 0.15);
+  border-color: rgba(255, 157, 66, 0.3);
+  color: #FF9D42;
+}
+
+.compact-refresh {
+  background: none;
+  border: none;
+  color: #666;
+  font-size: 14px;
+  padding: 4px 8px;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.compact-refresh:hover:not(:disabled) {
+  color: #FF9D42;
+}
+
+.compact-refresh:disabled {
+  opacity: 0.5;
+}
+
+.suggested-words-container {
+  margin-top: 1.5rem;
+  padding: 1rem;
+  background: rgba(26, 26, 28, 0.5);
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.suggested-words-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.suggested-words-header h3 {
+  font-size: 1rem;
+  color: #f8fafc;
+  margin: 0;
+}
+
+.refresh-btn {
+  background: rgba(255, 157, 66, 0.2);
+  color: #FF9D42;
+  border: 1px solid rgba(255, 157, 66, 0.3);
+  border-radius: 50%;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 16px;
+  transition: all 0.2s ease;
+}
+
+.refresh-btn:hover:not(:disabled) {
+  background: rgba(255, 157, 66, 0.3);
+  transform: rotate(180deg);
+}
+
+.refresh-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.suggested-words-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.suggested-word {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.1) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  padding: 6px 14px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.suggested-word:hover {
+  background: linear-gradient(135deg, rgba(255, 157, 66, 0.1) 0%, rgba(255, 200, 55, 0.1) 100%);
+  border-color: rgba(255, 157, 66, 0.3);
+  transform: translateY(-2px);
+}
+
+.empty-message {
+  color: #64748b;
+  font-size: 0.9rem;
+  font-style: italic;
+  padding: 4px 0;
+}

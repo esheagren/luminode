@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 // import axios from 'axios'; // No longer needed for checkWord here
 import { useDispatch } from 'react-redux'; // Import Redux hook
 import { fetchWordData } from '../features/wordCache/wordCacheSlice'; // Import the async thunk
+import styles from './WordInput.module.css';
 
 const WordInput = ({ 
   words, 
@@ -38,7 +39,6 @@ const WordInput = ({
     setError(null);
     // setLoading(true); // Loading is handled by the slice
     
-    console.log(`[WordInput] Dispatching fetchWordData for: ${word}`);
     dispatch(fetchWordData(word))
       .unwrap() // Use unwrap to easily handle resolved/rejected state
       .then(result => {
@@ -100,7 +100,7 @@ const WordInput = ({
   }, [words, wordInput, loading]);
 
   return (
-    <div className="word-input-container">
+    <div className={styles.wordInputContainer}>
       <form onSubmit={handleSubmit}>
         <input
           ref={inputRef}
@@ -118,12 +118,12 @@ const WordInput = ({
       </form>
       
       {showWordTags && words.length > 0 && (
-        <div className="selected-words">
+        <div className={styles.selectedWords}>
           {words.map((word, index) => (
-            <div key={`word-${index}`} className="word-tag">
+            <div key={`word-${index}`} className={styles.wordTag}>
               {word}
               <button
-                className="remove-word"
+                className={styles.removeWord}
                 onClick={() => {
                   const newWords = [...words];
                   newWords.splice(index, 1);
@@ -141,132 +141,6 @@ const WordInput = ({
         </div>
       )}
       
-      <style jsx="true">{`
-        .word-input-container {
-          position: relative;
-          width: 100%;
-          outline: none;
-        }
-        
-        form {
-          position: relative;
-          margin-bottom: 1rem;
-          border: none;
-          outline: none;
-          box-shadow: none;
-        }
-        
-        input {
-          width: 100%;
-          padding: 0.75rem 1rem;
-          border-radius: 8px;
-          border: 1px solid #2D3748;
-          background-color: #171923;
-          color: #E2E8F0;
-          font-size: 1rem;
-          transition: all 0.2s ease;
-          outline: none;
-          box-shadow: none;
-        }
-        
-        input:focus {
-          outline: none;
-          border-color: #FFC837;
-          box-shadow: 0 0 0 3px rgba(255, 200, 55, 0.2);
-        }
-        
-        /* Ensure no outline or boxes appear in any state */
-        input:not(:focus) {
-          outline: none;
-          box-shadow: none;
-        }
-        
-        input::placeholder {
-          color: #718096;
-        }
-        
-        .selected-words {
-          display: flex;
-          flex-wrap: wrap;
-          gap: 0.5rem;
-          margin-top: 0.5rem;
-        }
-        
-        .word-tag {
-          display: inline-flex;
-          align-items: center;
-          background-color: #2a2a2c;
-          border-radius: 16px;
-          padding: 0.25rem 0.75rem;
-          font-size: 0.9rem;
-        }
-        
-        .remove-word {
-          background: none;
-          border: none;
-          color: #FF5757;
-          margin-left: 0.5rem;
-          cursor: pointer;
-          font-size: 1rem;
-          padding: 0;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-        }
-        
-        @media (max-width: 768px) {
-          input {
-            padding: 0.6rem 0.8rem;
-            font-size: 0.95rem;
-          }
-
-          .word-tag {
-            padding: 0.3rem 0.6rem;
-            font-size: 0.85rem;
-          }
-        }
-
-        /* Mobile touch-friendly styles */
-        @media (max-width: 480px) {
-          .word-input-container {
-            width: 100%;
-          }
-
-          form {
-            margin-bottom: 0.75rem;
-          }
-
-          input {
-            /* 16px font-size prevents iOS auto-zoom on focus */
-            font-size: 16px;
-            padding: 0.75rem 1rem;
-            min-height: 48px;
-            border-radius: 10px;
-          }
-
-          .selected-words {
-            gap: 0.4rem;
-            margin-top: 0.4rem;
-          }
-
-          .word-tag {
-            padding: 0.35rem 0.65rem;
-            font-size: 0.85rem;
-            border-radius: 14px;
-            /* Ensure touch targets are at least 44px */
-            min-height: 32px;
-          }
-
-          .remove-word {
-            /* Increase touch target for remove button */
-            padding: 4px;
-            margin-left: 0.35rem;
-            font-size: 1.2rem;
-            min-width: 24px;
-            min-height: 24px;
-          }
-        }
-      `}</style>
     </div>
   );
 };

@@ -10,23 +10,15 @@ import { getApiUrl } from './environment';
  */
 export const findNeighbors = async (word, numResults = 4) => {
   try {
-    console.log(`Finding neighbors for "${word}"`);
     
     // Validate input
     if (!word) {
-      console.error('Missing required word parameter');
       throw new Error('Word is required for finding neighbors');
     }
     
     const apiUrl = getApiUrl('/api/findNeighbors');
-    console.log('API URL:', apiUrl);
     
     // Log request information
-    console.log('Sending request with data:', {
-      url: apiUrl,
-      method: 'POST',
-      data: { word, numResults }
-    });
     
     const response = await axios.post(apiUrl, {
       word,
@@ -34,11 +26,9 @@ export const findNeighbors = async (word, numResults = 4) => {
     });
     
     if (response.data && response.data.data) {
-      console.log('Neighbors API response:', response.data);
       return response.data.data;
     }
     
-    console.error('Invalid API response:', response.data);
     throw new Error('Invalid response from server');
   } catch (error) {
     console.error('Error finding neighbors:', error);
@@ -102,6 +92,5 @@ export const processNeighborsResults = (results, sourceWord) => {
     });
   }
   
-  console.log("Processed neighbors results:", neighborsCluster);
   return neighborsCluster;
 }; 

@@ -1,4 +1,5 @@
 import React, { useEffect, useRef } from 'react';
+import styles from './LoadingAnimation.module.css';
 
 const LoadingAnimation = ({ width = 200, height = 200 }) => {
   const canvasRef = useRef(null);
@@ -91,23 +92,8 @@ const LoadingAnimation = ({ width = 200, height = 200 }) => {
   }, [width, height]);
   
   return (
-    <div className="loading-animation-container">
+    <div className={styles.loadingAnimationContainer}>
       <canvas ref={canvasRef} width={width} height={height} />
-      <style jsx="true">{`
-        .loading-animation-container {
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          width: 100%;
-          height: 100%;
-          background-color: transparent;
-        }
-        
-        canvas {
-          width: 100%;
-          height: 100%;
-        }
-      `}</style>
     </div>
   );
 };

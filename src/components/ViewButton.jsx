@@ -1,4 +1,5 @@
 import React from 'react';
+import styles from './ViewButton.module.css';
 
 const View3DIcon = () => (
   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -31,34 +32,13 @@ const ViewButton = ({
   if (isCompact) {
     return (
       <button 
-        className={`view-toggle-compact`}
+        className={styles.viewToggleCompact}
         onClick={toggle}
         onMouseEnter={onMouseEnter}
         onMouseLeave={onMouseLeave}
       >
         {viewMode === '2D' ? <View3DIcon /> : <View2DIcon />}
         <span>{viewMode === '2D' ? '3D' : '2D'}</span>
-        <style jsx="true">{`
-          .view-toggle-compact {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: transparent;
-            color: #ccc;
-            border: none;
-            padding: 0.5rem 0.75rem;
-            border-radius: 4px;
-            font-size: 0.85rem;
-            cursor: pointer;
-            transition: all 0.15s ease;
-            gap: 0.25rem;
-          }
-          
-          .view-toggle-compact:hover {
-            background: rgba(255, 255, 255, 0.05);
-            color: white;
-          }
-        `}</style>
       </button>
     );
   }
@@ -66,30 +46,12 @@ const ViewButton = ({
   // Original button design for non-compact mode
   return (
     <button 
-      className={`view-toggle ${viewMode === '3D' ? 'view-3d' : 'view-2d'}`}
+      className={`${styles.viewToggle} ${viewMode === '3D' ? 'view-3d' : 'view-2d'}`}
       onClick={toggle}
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
     >
       {viewMode === '2D' ? '3D View' : '2D View'}
-      <style jsx="true">{`
-        .view-toggle {
-          padding: 0.4rem 0.75rem;
-          border-radius: 16px;
-          border: none;
-          font-size: 0.85rem;
-          font-weight: 500;
-          cursor: pointer;
-          transition: all 0.2s ease;
-          color: white;
-          background: linear-gradient(135deg, #FFC837 0%, #FF8008 100%);
-        }
-        
-        .view-toggle:hover {
-          transform: translateY(-1px);
-          box-shadow: 0 2px 5px rgba(255, 136, 8, 0.4);
-        }
-      `}</style>
     </button>
   );
 };

@@ -1,5 +1,6 @@
 import React from 'react';
 import './ToolbarStyles.css';
+import styles from './ProjectionSelection.module.css';
 
 /**
  * Component displayed during axis projection selection mode.
@@ -17,8 +18,8 @@ const ProjectionSelection = ({
   const canCalculate = axisComplete && projectionWords.length > 0;
 
   return (
-    <div className="projection-selection">
-      <div className="info-text">
+    <div className={styles.projectionSelection}>
+      <div className={styles.infoText}>
         <p>
           {selectedPoints.length === 0 && (
             "Define a semantic axis: select the first word (the \"from\" direction)."
@@ -35,34 +36,34 @@ const ProjectionSelection = ({
         </p>
       </div>
 
-      <div className="selection-info">
+      <div className={styles.selectionInfo}>
         {selectedPoints.length > 0 && (
-          <div className="selected-points">
-            <div className="point-tag projection-axis">
-              <span className="point-label">From:</span>
-              <span className="point-value">{selectedPoints[0] || "None"}</span>
+          <div className={styles.selectedPoints}>
+            <div className={`${styles.pointTag} ${styles.projectionAxis}`}>
+              <span className={styles.pointLabel}>From:</span>
+              <span className={styles.pointValue}>{selectedPoints[0] || "None"}</span>
             </div>
 
             {selectedPoints.length > 1 && (
-              <div className="point-tag projection-axis">
-                <span className="point-label">To:</span>
-                <span className="point-value">{selectedPoints[1]}</span>
+              <div className={`${styles.pointTag} ${styles.projectionAxis}`}>
+                <span className={styles.pointLabel}>To:</span>
+                <span className={styles.pointValue}>{selectedPoints[1]}</span>
               </div>
             )}
 
             {projectionWords.map((word, i) => (
-              <div key={i} className="point-tag projection-word">
-                <span className="point-value">{word}</span>
+              <div key={i} className={`${styles.pointTag} ${styles.projectionWord}`}>
+                <span className={styles.pointValue}>{word}</span>
               </div>
             ))}
           </div>
         )}
       </div>
 
-      <div className="selection-controls">
+      <div className={styles.selectionControls}>
         {selectedPoints.length > 0 && (
           <button
-            className="control-button reset"
+            className={`${styles.controlButton} ${styles.reset}`}
             onClick={onReset}
             disabled={loading}
           >
@@ -71,7 +72,7 @@ const ProjectionSelection = ({
         )}
 
         <button
-          className="control-button cancel"
+          className={`${styles.controlButton} ${styles.cancel}`}
           onClick={onCancel}
           disabled={loading}
         >
@@ -80,7 +81,7 @@ const ProjectionSelection = ({
 
         {canCalculate && (
           <button
-            className="control-button calculate projection"
+            className={`${styles.controlButton} ${styles.calculate} ${styles.projection}`}
             onClick={onCalculate}
             disabled={loading}
           >
@@ -89,138 +90,6 @@ const ProjectionSelection = ({
         )}
       </div>
 
-      <style jsx="true">{`
-        .projection-selection {
-          padding: 0.75rem;
-          color: #eee;
-        }
-
-        .info-text {
-          margin-bottom: 0.75rem;
-          font-size: 0.9rem;
-          color: #bbb;
-        }
-
-        .selection-info {
-          margin-bottom: 0.75rem;
-        }
-
-        .selected-points {
-          display: flex;
-          flex-wrap: wrap;
-          gap: 0.5rem;
-          margin-bottom: 0.75rem;
-        }
-
-        .point-tag {
-          border-radius: 4px;
-          padding: 0.3rem 0.5rem;
-          font-size: 0.85rem;
-          display: flex;
-          align-items: center;
-          gap: 0.3rem;
-        }
-
-        .point-tag.projection-axis {
-          background: rgba(255, 152, 0, 0.2);
-        }
-
-        .point-tag.projection-word {
-          background: rgba(156, 39, 176, 0.2);
-        }
-
-        .point-label {
-          color: #FFB74D;
-          font-weight: 500;
-        }
-
-        .point-value {
-          color: white;
-        }
-
-        .selection-controls {
-          display: flex;
-          justify-content: flex-end;
-          gap: 0.5rem;
-        }
-
-        .control-button {
-          background: #222;
-          color: #ddd;
-          border: none;
-          border-radius: 4px;
-          padding: 0.4rem 0.75rem;
-          font-size: 0.85rem;
-          cursor: pointer;
-          transition: all 0.2s ease;
-        }
-
-        .control-button:hover {
-          background: #333;
-        }
-
-        .control-button:disabled {
-          opacity: 0.5;
-          cursor: not-allowed;
-        }
-
-        .control-button.reset,
-        .control-button.cancel {
-          background: transparent;
-        }
-
-        .control-button.reset:hover,
-        .control-button.cancel:hover {
-          background: rgba(255, 255, 255, 0.1);
-        }
-
-        .control-button.calculate.projection {
-          background: #FF9800;
-          color: white;
-        }
-
-        .control-button.calculate.projection:hover {
-          background: #FFB74D;
-        }
-
-        @media (max-width: 480px) {
-          .projection-selection {
-            padding: 0.5rem;
-          }
-
-          .info-text {
-            font-size: 0.85rem;
-            text-align: center;
-          }
-
-          .selected-points {
-            justify-content: center;
-          }
-
-          .point-tag {
-            padding: 0.35rem 0.6rem;
-            font-size: 0.8rem;
-          }
-
-          .selection-controls {
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 0.5rem;
-          }
-
-          .control-button {
-            min-height: 44px;
-            padding: 0.5rem 1rem;
-            font-size: 0.9rem;
-            flex: 1;
-            min-width: 80px;
-          }
-
-          .control-button.calculate {
-            flex: 2;
-          }
-        }
-      `}</style>
     </div>
   );
 };

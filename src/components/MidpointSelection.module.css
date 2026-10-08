@@ -1,0 +1,73 @@
+/* applied alongside the global .toolbar.compact from ToolbarStyles.css */
+.compact-toolbar {
+  background-color: rgba(15, 23, 42, 0.8);
+}
+
+.selected-points {
+  flex: 1;
+  display: flex;
+  align-items: center;
+}
+
+.no-points {
+  color: #888;
+  font-size: 0.9rem;
+}
+
+.point-list {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.point-instruction {
+  color: #aaa;
+  font-size: 0.85rem;
+  font-style: italic;
+  margin-left: 0.5rem;
+}
+
+.selection-actions {
+  display: flex;
+  gap: 0.5rem;
+  margin-left: auto;
+}
+
+.calculate-btn {
+  font-weight: bold;
+}
+
+/* Mobile responsive */
+@media (max-width: 480px) {
+
+  .selected-points {
+    width: 100%;
+  }
+
+  .point-list {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .no-points,
+  .point-instruction {
+    font-size: 0.85rem;
+    text-align: center;
+  }
+
+  .selection-actions {
+    width: 100%;
+    justify-content: center;
+    margin-left: 0;
+  }
+
+  .search-btn {
+    min-height: 44px;
+    padding: 0.5rem 1rem;
+  }
+
+  .calculate-btn {
+    margin-left: 0 !important;
+    margin-top: 0.5rem;
+  }
+}

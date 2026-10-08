@@ -1,5 +1,6 @@
 import React, { useRef, useEffect, useState } from 'react';
 import SimpleLoadingAnimation from './SimpleLoadingAnimation';
+import styles from './LoadingOverlay.module.css';
 
 const LoadingOverlay = () => {
   const overlayRef = useRef(null);
@@ -29,27 +30,12 @@ const LoadingOverlay = () => {
   };
 
   return (
-    <div className="loading-overlay" ref={overlayRef}>
+    <div className={styles.loadingOverlay} ref={overlayRef}>
       <SimpleLoadingAnimation 
         width={dimensions.width} 
         height={dimensions.height} 
       />
       
-      <style jsx="true">{`
-        .loading-overlay {
-          position: absolute;
-          top: 0;
-          left: 0;
-          width: 100%;
-          height: 100%;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          background-color: rgba(26, 26, 46, 0.9);
-          z-index: 100;
-          border-radius: 12px;
-        }
-      `}</style>
     </div>
   );
 };

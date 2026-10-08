@@ -12,6 +12,14 @@ body {
   overflow-x: hidden;
 }
 
+/* App.jsx wrappers. HomePage renders its own, module-scoped .app-container / .main-layout
+   inside these; the properties of these rules are merged into HomePage.module.css. */
+.app-wrapper {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
 .app-container {
   display: flex;
   flex-direction: column;
@@ -24,23 +32,6 @@ body {
   padding-top: 10px;
 }
 
-/* Header */
-.header {
-  background-color: #1e293b;
-  padding: 0.5rem;
-  border-bottom: 1px solid #334155;
-  text-align: center;
-  height: 50px;
-}
-
-.header h1 {
-  font-size: 1.25rem;
-  font-weight: 600;
-  color: #60a5fa;
-  margin: 0;
-}
-
-/* Main layout - Desmos style */
 .main-layout {
   position: relative;
   z-index: 10;
@@ -49,228 +40,15 @@ body {
   padding-bottom: 1rem;
 }
 
-/* HomePage component layout */
-.home-container {
-  display: flex;
-  width: 100%;
-  height: 100%;
-}
-
-/* Sidebar for inputs */
-.sidebar {
-  width: 300px;
-  min-width: 300px;
-  background-color: #1e293b;
-  border-right: 1px solid #334155;
-  padding: 0.75rem;
-  overflow-y: auto;
-  display: flex;
-  flex-direction: column;
-}
-
-/* Graph area */
-.graph-area {
-  flex: 1;
+/* Placeholder page used by the /contact route */
+.content-page {
   position: relative;
-  background-color: #0f172a;
-  overflow: hidden;
+  z-index: 1;
+  backdrop-filter: blur(5px);
+  background-color: rgba(26, 26, 28, 0.7);
 }
 
-/* Word input component */
-.word-input-container {
-  margin-bottom: 1rem;
-}
-
-.input-row {
-  margin-bottom: 0.5rem;
-}
-
-.input-row label {
-  display: block;
-  margin-bottom: 0.25rem;
-  font-weight: 500;
-  color: #94a3b8;
-  font-size: 0.75rem;
-}
-
-.input-row input {
-  width: 100%;
-  padding: 0.5rem;
-  background-color: #0f172a;
-  border: 1px solid #334155;
-  border-radius: 0.25rem;
-  color: #e2e8f0;
-  font-size: 0.75rem;
-}
-
-.analyze-btn {
-  width: 100%;
-  padding: 0.5rem;
-  background-color: #3b82f6;
-  color: white;
-  border: none;
-  border-radius: 0.25rem;
-  font-size: 0.75rem;
-  font-weight: 500;
-  cursor: pointer;
-}
-
-/* Response container */
-.response-container {
-  font-size: 0.75rem;
-  overflow-y: auto;
-  flex: 1;
-}
-
-.response-message {
-  color: #34d399;
-  margin-bottom: 0.5rem;
-}
-
-.word-info {
-  background-color: #0f172a;
-  border-radius: 0.25rem;
-  padding: 0.5rem;
-  margin-bottom: 0.5rem;
-}
-
-.word-info h4 {
-  color: #60a5fa;
-  margin-bottom: 0.25rem;
-  font-size: 0.75rem;
-}
-
-.vector-preview {
-  font-family: monospace;
-  font-size: 0.65rem;
-  word-break: break-all;
-  color: #94a3b8;
-  max-height: 40px;
-  overflow-y: auto;
-}
-
-/* Graph container */
-.graph-container {
-  width: 100%;
-  height: 100%;
-  position: relative;
-}
-
-.vector-canvas {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: #0f172a;
-}
-
-/* Graph legend */
-.graph-legend {
-  position: absolute;
-  bottom: 1rem;
-  left: 1rem;
-  background-color: rgba(15, 23, 42, 0.85);
-  padding: 0.5rem;
-  border-radius: 0.25rem;
-  border: 1px solid #334155;
-  font-size: 0.85rem;
-  font-weight: 500;
-  color: #e2e8f0;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
-}
-
-.legend-item {
-  display: flex;
-  align-items: center;
-  margin-bottom: 0.35rem;
-}
-
-.legend-color {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  margin-right: 0.5rem;
-  border: 1px solid rgba(255, 255, 255, 0.3);
-}
-
-.legend-label {
-  white-space: nowrap;
-}
-
-/* Responsive adjustments */
-@media (max-width: 768px) {
-  .home-container {
-    flex-direction: column;
-  }
-  
-  .sidebar {
-    width: 100%;
-    height: 40%;
-    min-height: 200px;
-    border-right: none;
-    border-bottom: 1px solid #334155;
-  }
-  
-  .graph-area {
-    height: 60%;
-  }
-}
-
-/* 3D/2D toggle animation */
-.view-mode-toggle {
-  position: relative;
-  display: inline-block;
-  width: 60px;
-  height: 34px;
-  margin-right: 10px;
-}
-
-.view-mode-toggle input {
-  opacity: 0;
-  width: 0;
-  height: 0;
-}
-
-.toggle-slider {
-  position: absolute;
-  cursor: pointer;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: #334155;
-  transition: .4s;
-  border-radius: 34px;
-}
-
-.toggle-slider:before {
-  position: absolute;
-  content: "";
-  height: 26px;
-  width: 26px;
-  left: 4px;
-  bottom: 4px;
-  background-color: white;
-  transition: .4s;
-  border-radius: 50%;
-}
-
-input:checked + .toggle-slider {
-  background-color: #4285F4;
-}
-
-input:checked + .toggle-slider:before {
-  transform: translateX(26px);
-}
-
-.toggle-label {
-  margin-left: 10px;
-  font-weight: 500;
-  color: #e2e8f0;
-}
-
-/* 3D point tooltip */
+/* Point tooltip created imperatively by visualization/VectorTooltip.js */
 #vector-tooltip {
   position: fixed;
   z-index: 1000;
@@ -285,182 +63,10 @@ input:checked + .toggle-slider:before {
   border: 1px solid #334155;
 }
 
-/* View mode transition */
-.view-transition {
-  transition: opacity 0.3s ease-in-out, transform 0.5s ease-in-out;
-}
-
-@keyframes viewTransition {
-  0% {
-    opacity: 0;
-    transform: scale(0.95) rotateY(0deg);
-  }
-  50% {
-    opacity: 0.5;
-    transform: scale(1) rotateY(90deg);
-  }
-  100% {
-    opacity: 1;
-    transform: scale(1) rotateY(0deg);
-  }
-}
-
-/* Animated Background */
-.animated-background {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: -1;
-  overflow: hidden;
-  background: radial-gradient(circle at center, rgba(20, 20, 22, 1) 0%, rgba(15, 15, 16, 1) 70%, rgba(10, 10, 10, 1) 100%);
-}
-
-/* Main orbs that resemble the logo */
-.orb {
-  position: absolute;
-  border-radius: 50%;
-  filter: blur(10px);
-  opacity: 0.2;
-}
-
-.orb1 {
-  width: 300px;
-  height: 300px;
-  background: radial-gradient(circle at 30% 30%, #FFC837, #FF9D42);
-  top: 30%;
-  left: 25%;
-  animation: float 15s ease-in-out infinite, pulse 8s ease-in-out infinite;
-}
-
-.orb2 {
-  width: 250px;
-  height: 250px;
-  background: radial-gradient(circle at 30% 30%, #FF9D42, #FF5757);
-  top: 40%;
-  left: 45%;
-  animation: float 18s ease-in-out infinite reverse, pulse 10s ease-in-out 2s infinite;
-}
-
-.orb3 {
-  width: 200px;
-  height: 200px;
-  background: radial-gradient(circle at 30% 30%, #FFC837, #FF9D42);
-  top: 20%;
-  left: 60%;
-  animation: float 20s ease-in-out infinite, pulse 12s ease-in-out 4s infinite;
-}
-
-/* Dots container for the circular dots around the orbs */
-.dots-container {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 0;
-  height: 0;
-  transform: translate(-50%, -50%);
-  animation: rotate 30s linear infinite;
-}
-
-/* Individual dots that form circles around the orbs */
-.dot {
-  position: absolute;
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, #FF9D42, #FFC837);
-  opacity: 0.4;
-  animation: pulse 4s ease-in-out infinite, glow 6s ease-in-out infinite;
-}
-
-/* Animations */
-@keyframes float {
-  0%, 100% {
-    transform: translateY(0) translateX(0);
-  }
-  25% {
-    transform: translateY(-30px) translateX(15px);
-  }
-  50% {
-    transform: translateY(20px) translateX(-20px);
-  }
-  75% {
-    transform: translateY(10px) translateX(25px);
-  }
-}
-
-@keyframes pulse {
-  0%, 100% {
-    transform: scale(1);
-    opacity: 0.2;
-  }
-  50% {
-    transform: scale(1.1);
-    opacity: 0.3;
-  }
-}
-
-@keyframes rotate {
-  from {
-    transform: translate(-50%, -50%) rotate(0deg);
-  }
-  to {
-    transform: translate(-50%, -50%) rotate(360deg);
-  }
-}
-
-@keyframes glow {
-  0%, 100% {
-    box-shadow: 0 0 5px rgba(255, 157, 66, 0.5);
-  }
-  50% {
-    box-shadow: 0 0 20px rgba(255, 157, 66, 0.8);
-  }
-}
-
-/* Make sure content remains visible over the background */
-.content-page, .sidebar, .graph-container {
-  position: relative;
-  z-index: 1;
-  backdrop-filter: blur(5px);
-  background-color: rgba(26, 26, 28, 0.7);
-}
-
-/* Add a subtle glass effect to containers */
-.navbar, .word-input-container, .tools-container {
-  background-color: rgba(15, 15, 16, 0.8);
-  backdrop-filter: blur(5px);
-  border: 1px solid rgba(255, 157, 66, 0.1);
-}
-
-/* Add these styles to your existing App.css */
-.app-wrapper {
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-}
-
-/* Enhanced Mobile Responsive Styles */
-
 /* Tablet breakpoint */
 @media (max-width: 768px) {
-  .sidebar {
-    width: 260px;
-    min-width: 260px;
-  }
-
   .main-layout {
     min-height: calc(100vh - 60px);
-  }
-
-  .graph-legend {
-    font-size: 0.75rem;
-    padding: 0.4rem;
-  }
-
-  .legend-item {
-    margin-bottom: 0.25rem;
   }
 
   #vector-tooltip {
@@ -486,46 +92,9 @@ input:checked + .toggle-slider:before {
     padding-bottom: 0;
   }
 
-  .home-container {
-    flex-direction: column;
-  }
-
-  .sidebar {
-    position: fixed;
-    left: -100%;
-    top: 0;
-    width: 85vw;
-    max-width: 320px;
-    height: 100vh;
-    z-index: 1000;
-    transition: left 0.3s ease;
-    border-right: 1px solid rgba(255, 255, 255, 0.1);
-  }
-
-  .sidebar.open {
-    left: 0;
-  }
-
-  .graph-area {
-    height: calc(100vh - 120px);
-    min-height: 50vh;
-  }
-
-  .graph-legend {
-    bottom: 0.5rem;
-    left: 0.5rem;
-    font-size: 0.7rem;
-    padding: 0.35rem;
-  }
-
   #vector-tooltip {
     font-size: 11px;
     padding: 6px 8px;
     max-width: 200px;
-  }
-
-  /* Prevent body scroll when sidebar is open */
-  body.sidebar-open {
-    overflow: hidden;
   }
 }

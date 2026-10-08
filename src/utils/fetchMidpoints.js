@@ -18,7 +18,6 @@ export const findMidpointsRecursively = async (
       numNeighbors: numNeighbors
     });
     
-    console.log(`Midpoint words found between ${word1} and ${word2}:`, result.data);
     
     // Create a cluster for this midpoint
     const cluster = {

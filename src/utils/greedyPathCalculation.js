@@ -11,14 +11,12 @@ import { getApiUrl } from './environment';
  */
 export const findGreedyPath = async (word1, word2, maxHops = 20) => {
   try {
-    console.log(`Finding greedy path from "${word1}" to "${word2}" with max ${maxHops} hops`);
 
     if (!word1 || !word2) {
       throw new Error('Both words are required for greedy path calculation');
     }
 
     const apiUrl = getApiUrl('/api/findGreedyPath');
-    console.log('API URL:', apiUrl);
 
     const response = await axios.post(apiUrl, {
       word1,
@@ -27,7 +25,6 @@ export const findGreedyPath = async (word1, word2, maxHops = 20) => {
     });
 
     if (response.data && response.data.data) {
-      console.log('Greedy path API response:', response.data);
       return response.data.data;
     }
 
@@ -81,6 +78,5 @@ export const processGreedyPathResults = (results, word1, word2) => {
     });
   }
 
-  console.log("Processed greedy path results:", greedyPathCluster);
   return greedyPathCluster;
 };

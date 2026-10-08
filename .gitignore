@@ -39,3 +39,6 @@ server/embeddings/*.json
 
 # Keep the embeddings directory itself
 !server/embeddings/.gitkeep
+
+# Stray Next.js output (this is a Vite app)
+.next/

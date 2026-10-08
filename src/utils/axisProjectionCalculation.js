@@ -11,7 +11,6 @@ import { getApiUrl } from './environment';
  */
 export const findAxisProjection = async (axisWord1, axisWord2, wordsToProject) => {
   try {
-    console.log(`Projecting ${wordsToProject.length} words onto axis "${axisWord1}" → "${axisWord2}"`);
 
     if (!axisWord1 || !axisWord2) {
       throw new Error('Both axis words are required');
@@ -28,7 +27,6 @@ export const findAxisProjection = async (axisWord1, axisWord2, wordsToProject) =
     });
 
     if (response.data && response.data.data) {
-      console.log('Axis projection API response:', response.data);
       return response.data.data;
     }
 
@@ -82,6 +80,5 @@ export const processAxisProjectionResults = (results, axisWord1, axisWord2) => {
     });
   }
 
-  console.log("Processed axis projection results:", axisProjectionCluster);
   return axisProjectionCluster;
 };

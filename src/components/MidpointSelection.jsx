@@ -1,5 +1,6 @@
 import React from 'react';
 import './ToolbarStyles.css';
+import styles from './MidpointSelection.module.css';
 
 /**
  * Component displayed during midpoint selection mode
@@ -12,13 +13,13 @@ const MidpointSelection = ({
   loading = false 
 }) => {
   return (
-    <div className="toolbar compact">
+    <div className={`toolbar compact ${styles.compactToolbar}`}>
       <div className="toolbar-inner">
-        <div className="selected-points">
+        <div className={styles.selectedPoints}>
           {selectedPoints.length === 0 ? (
-            <span className="no-points">Click on a point in the visualization to select it.</span>
+            <span className={styles.noPoints}>Click on a point in the visualization to select it.</span>
           ) : (
-            <div className="point-list">
+            <div className={styles.pointList}>
               {selectedPoints.map((word, index) => (
                 <div key={index} className="result-item">
                   <span className="result-word">{word}</span>
@@ -26,16 +27,16 @@ const MidpointSelection = ({
               ))}
               
               {selectedPoints.length < 2 && (
-                <span className="point-instruction">Click to select {selectedPoints.length === 0 ? 'first' : 'second'} point</span>
+                <span className={styles.pointInstruction}>Click to select {selectedPoints.length === 0 ? 'first' : 'second'} point</span>
               )}
               
               {selectedPoints.length === 2 && loading && (
-                <span className="point-instruction">Finding midpoint...</span>
+                <span className={styles.pointInstruction}>Finding midpoint...</span>
               )}
               
               {selectedPoints.length === 2 && !loading && onCalculate && (
                 <button 
-                  className="search-btn calculate-btn"
+                  className={`search-btn ${styles.searchBtn} ${styles.calculateBtn}`}
                   onClick={onCalculate}
                   style={{ background: 'rgba(6, 182, 72, 0.2)', color: '#4ada7c', marginLeft: '10px' }}
                 >
@@ -46,10 +47,10 @@ const MidpointSelection = ({
           )}
         </div>
         
-        <div className="selection-actions">
+        <div className={styles.selectionActions}>
           {selectedPoints.length > 0 && (
             <button 
-              className="search-btn"
+              className={`search-btn ${styles.searchBtn}`}
               onClick={onReset}
               disabled={loading}
               style={{ background: 'rgba(255, 255, 255, 0.1)' }}
@@ -59,7 +60,7 @@ const MidpointSelection = ({
           )}
           
           <button 
-            className="search-btn"
+            className={`search-btn ${styles.searchBtn}`}
             onClick={onCancel}
             disabled={loading}
             style={{ background: 'rgba(220, 0, 0, 0.1)', color: '#FF7272' }}
@@ -69,84 +70,6 @@ const MidpointSelection = ({
         </div>
       </div>
       
-      <style jsx="true">{`
-        .toolbar.compact {
-          background-color: rgba(15, 23, 42, 0.8);
-        }
-        
-        .selected-points {
-          flex: 1;
-          display: flex;
-          align-items: center;
-        }
-        
-        .no-points {
-          color: #888;
-          font-size: 0.9rem;
-        }
-        
-        .point-list {
-          display: flex;
-          align-items: center;
-          gap: 0.5rem;
-        }
-        
-        .point-instruction {
-          color: #aaa;
-          font-size: 0.85rem;
-          font-style: italic;
-          margin-left: 0.5rem;
-        }
-        
-        .selection-actions {
-          display: flex;
-          gap: 0.5rem;
-          margin-left: auto;
-        }
-        
-        .calculate-btn {
-          font-weight: bold;
-        }
-
-        /* Mobile responsive */
-        @media (max-width: 480px) {
-          .toolbar-inner {
-            flex-direction: column;
-            gap: 0.5rem;
-          }
-
-          .selected-points {
-            width: 100%;
-          }
-
-          .point-list {
-            flex-wrap: wrap;
-            justify-content: center;
-          }
-
-          .no-points,
-          .point-instruction {
-            font-size: 0.85rem;
-            text-align: center;
-          }
-
-          .selection-actions {
-            width: 100%;
-            justify-content: center;
-            margin-left: 0;
-          }
-
-          .search-btn {
-            min-height: 44px;
-            padding: 0.5rem 1rem;
-          }
-
-          .calculate-btn {
-            margin-left: 0 !important;
-            margin-top: 0.5rem;
-          }
-        }
-      `}</style>
     </div>
   );
 };

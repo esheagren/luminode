@@ -1,4 +1,4 @@
-/* Shared styles for Midpoint and Analogy toolbars */
+/* Shared toolbar chrome used by MidpointSelection and AnalogySelection */
 .toolbar {
   padding: 0.75rem;
   display: flex;
@@ -15,23 +15,6 @@
   flex-wrap: nowrap;
   gap: 0.5rem;
   width: 100%;
-}
-
-.word-select {
-  padding: 0.4rem 0.5rem;
-  border-radius: 4px;
-  background: rgba(42, 42, 44, 0.6);
-  color: white;
-  border: 1px solid #3a3a3c;
-  font-size: 0.85rem;
-  min-width: 120px;
-  flex: 1;
-}
-
-.connector {
-  color: #aaa;
-  font-size: 0.85rem;
-  white-space: nowrap;
 }
 
 .search-btn {
@@ -57,83 +40,7 @@
   cursor: not-allowed;
 }
 
-/* Midpoint specific */
-.midpoint-btn {
-  background: linear-gradient(135deg, #4285F4 0%, #34A853 100%);
-}
-
-.midpoint-btn:hover:not(:disabled) {
-  box-shadow: 0 2px 4px rgba(52, 168, 83, 0.3);
-}
-
-.selection-btn {
-  background: linear-gradient(135deg, #34A853 0%, #4285F4 100%);
-  color: white;
-  border: none;
-  border-radius: 4px;
-  padding: 0.5rem 1rem;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.selection-btn:hover:not(:disabled) {
-  box-shadow: 0 2px 4px rgba(52, 168, 83, 0.3);
-  transform: translateY(-1px);
-}
-
-.selection-btn:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-}
-
-/* Analogy specific */
-.analogy-btn {
-  background: linear-gradient(135deg, #FF8008 0%, #FFC837 100%);
-}
-
-.analogy-btn:hover:not(:disabled) {
-  box-shadow: 0 2px 4px rgba(255, 136, 8, 0.3);
-}
-
-.analogy-result-indicator {
-  font-size: 0.85rem;
-  color: #FFC837;
-  font-weight: bold;
-}
-
-/* Analogy selection animations */
-.animate-arrow {
-  animation: arrow-pulse 1s infinite;
-}
-
-@keyframes arrow-pulse {
-  0% { opacity: 0.5; transform: translateX(0); }
-  50% { opacity: 1; transform: translateX(3px); }
-  100% { opacity: 0.5; transform: translateX(0); }
-}
-
-.analogy-searching {
-  animation: searching-pulse 1.5s infinite;
-}
-
-@keyframes searching-pulse {
-  0% { opacity: 0.7; }
-  50% { opacity: 1; }
-  100% { opacity: 0.7; }
-}
-
 /* Results display */
-.results-container {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-  width: 100%;
-  margin-top: 0.5rem;
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
-  padding-top: 0.5rem;
-}
-
 .result-item {
   display: flex;
   justify-content: space-between;
@@ -147,11 +54,6 @@
 .result-word {
   font-weight: 500;
   color: #e0e0e0;
-}
-
-.result-score {
-  color: #94a3b8;
-  margin-left: 0.5rem;
 }
 
 /* Compact mode for post-selection results */
@@ -175,25 +77,10 @@
     gap: 0.5rem;
   }
 
-  .word-select {
-    min-width: 100px;
-    padding: 0.35rem 0.4rem;
-    font-size: 0.8rem;
-  }
-
-  .connector {
-    font-size: 0.75rem;
-  }
-
   .search-btn {
     padding: 0.35rem 0.6rem;
     font-size: 0.8rem;
     min-height: 36px;
-  }
-
-  .selection-btn {
-    padding: 0.4rem 0.8rem;
-    font-size: 0.8rem;
   }
 }
 
@@ -211,18 +98,6 @@
     gap: 0.5rem;
   }
 
-  .word-select {
-    width: 100%;
-    min-width: unset;
-    padding: 0.5rem;
-    font-size: 0.9rem;
-    min-height: 44px;
-  }
-
-  .connector {
-    display: none;
-  }
-
   .search-btn {
     width: 100%;
     min-height: 44px;
@@ -232,21 +107,9 @@
     padding: 0.5rem 0.75rem;
   }
 
-  .selection-btn {
-    width: 100%;
-    min-height: 44px;
-    padding: 0.5rem 1rem;
-    font-size: 0.9rem;
-  }
-
-  .results-container {
-    flex-direction: column;
-    gap: 0.35rem;
-  }
-
   .result-item {
     width: 100%;
     min-width: unset;
     padding: 0.35rem 0.5rem;
   }
-} 
+}

@@ -16,6 +16,7 @@ export default [
       'node_modules',
       'coverage',
       'output',
+      'spikes',
     ],
   },
   js.configs.recommended,

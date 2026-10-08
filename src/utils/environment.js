@@ -40,59 +40,9 @@ export const getApiUrl = (path) => {
   return `${baseUrl}${normalizedPath}`;
 };
 
-/**
- * Log environment details (for debugging)
- */
-export const logEnvironmentInfo = () => {
-  if (typeof window !== 'undefined') {
-    console.log('Environment Info:');
-    console.log(`- Host: ${window.location.hostname}`);
-    console.log(`- Origin: ${window.location.origin}`);
-    console.log(`- API Server URL: ${getBaseUrl()}`);
-    console.log(`- Is Production: ${isProduction()}`);
-    console.log(`- Example API URL: ${getApiUrl('/api/checkWord')}`);
-    
-    // CORS and security info
-    console.log(`- Referrer Policy: ${document.referrerPolicy || 'not set'}`);
-    console.log(`- Content Security Policy: ${document.contentSecurityPolicy || 'not set'}`);
-  }
-};
-
-/**
- * Initialize the environment with CORS protection
- * Called on app startup to ensure proper configuration
- */
-export const initializeEnvironment = () => {
-  if (typeof window !== 'undefined') {
-    // Setting up CORS protection for fetch requests
-    window.addEventListener('unhandledrejection', (event) => {
-      if (event.reason && 
-          (event.reason.name === 'AxiosError' || 
-           (typeof event.reason.toString === 'function' && 
-            event.reason.toString().includes('Network Error')))) {
-        console.error('Possible CORS issue detected:', event.reason);
-        console.log('Current environment context:', {
-          host: window.location.hostname,
-          origin: window.location.origin,
-          production: isProduction(),
-          apiServer: getBaseUrl()
-        });
-      }
-    });
-    
-    // Log environment on load
-    setTimeout(logEnvironmentInfo, 0);
-  }
-};
-
-// Initialize environment when this module is loaded
-initializeEnvironment();
-
 // Export for convenience
 export default {
   isProduction,
   getBaseUrl,
-  getApiUrl,
-  logEnvironmentInfo,
-  initializeEnvironment
+  getApiUrl
 }; 

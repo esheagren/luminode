@@ -1,0 +1,13 @@
+.simple-loading-animation-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  background-color: transparent;
+}
+
+.simple-loading-animation-container canvas {
+  width: 100%;
+  height: 100%;
+}

@@ -9,6 +9,7 @@ import {
   calculateCosineSimilarity, 
   formatSimilarity 
 } from './VectorUtils';
+import styles from './VectorGraph3D.module.css';
 
 const VectorGraph3D = ({ coordinates, words, containerRef, rulerActive }) => {
   const canvasRef = useRef(null);
@@ -975,118 +976,30 @@ const VectorGraph3D = ({ coordinates, words, containerRef, rulerActive }) => {
 
   return (
     <>
-      <canvas ref={canvasRef} className="vector-canvas" />
+      <canvas ref={canvasRef} className={styles.vectorCanvas} />
 
       {/* Pinned point info card */}
       {pinnedPoint && (
-        <div className="pinned-point-card">
-          <div className="pinned-point-header">
-            <span className="pinned-point-word">{pinnedPoint.word}</span>
+        <div className={styles.pinnedPointCard}>
+          <div className={styles.pinnedPointHeader}>
+            <span className={styles.pinnedPointWord}>{pinnedPoint.word}</span>
             <button
-              className="pinned-point-close"
+              className={styles.pinnedPointClose}
               onClick={() => setPinnedPoint(null)}
               aria-label="Close"
             >
               ×
             </button>
           </div>
-          <div className="pinned-point-info">
-            {pinnedPoint.isPrimary && <span className="pinned-point-badge primary">Primary</span>}
+          <div className={styles.pinnedPointInfo}>
+            {pinnedPoint.isPrimary && <span className={`${styles.pinnedPointBadge} ${styles.primary}`}>Primary</span>}
           </div>
           {pinnedPoint.truncatedVector && (
-            <div className="pinned-point-vector">
-              <span className="vector-label">Vector:</span>
-              <span className="vector-value">{pinnedPoint.truncatedVector}</span>
+            <div className={styles.pinnedPointVector}>
+              <span className={styles.vectorLabel}>Vector:</span>
+              <span className={styles.vectorValue}>{pinnedPoint.truncatedVector}</span>
             </div>
           )}
-          <style jsx="true">{`
-            .pinned-point-card {
-              position: absolute;
-              bottom: 16px;
-              left: 16px;
-              background: rgba(15, 23, 42, 0.95);
-              border: 1px solid rgba(255, 255, 255, 0.2);
-              border-radius: 12px;
-              padding: 12px 16px;
-              min-width: 200px;
-              max-width: 320px;
-              box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
-              z-index: 100;
-              backdrop-filter: blur(8px);
-            }
-
-            .pinned-point-header {
-              display: flex;
-              justify-content: space-between;
-              align-items: center;
-              margin-bottom: 8px;
-            }
-
-            .pinned-point-word {
-              font-size: 18px;
-              font-weight: 600;
-              color: #f8fafc;
-            }
-
-            .pinned-point-close {
-              background: none;
-              border: none;
-              color: #94a3b8;
-              font-size: 20px;
-              cursor: pointer;
-              padding: 0 4px;
-              line-height: 1;
-              transition: color 0.2s;
-            }
-
-            .pinned-point-close:hover {
-              color: #f8fafc;
-            }
-
-            .pinned-point-info {
-              display: flex;
-              flex-wrap: wrap;
-              gap: 6px;
-              margin-bottom: 8px;
-            }
-
-            .pinned-point-badge {
-              font-size: 11px;
-              padding: 2px 8px;
-              border-radius: 10px;
-              font-weight: 500;
-            }
-
-            .pinned-point-badge.primary {
-              background: rgba(255, 157, 66, 0.2);
-              color: #FF9D42;
-            }
-
-            .pinned-point-vector {
-              font-size: 12px;
-              color: #94a3b8;
-              word-break: break-all;
-            }
-
-            .vector-label {
-              color: #64748b;
-              margin-right: 4px;
-            }
-
-            .vector-value {
-              font-family: monospace;
-            }
-
-            @media (max-width: 480px) {
-              .pinned-point-card {
-                bottom: 8px;
-                left: 8px;
-                right: 8px;
-                max-width: none;
-                min-width: auto;
-              }
-            }
-          `}</style>
         </div>
       )}
     </>
