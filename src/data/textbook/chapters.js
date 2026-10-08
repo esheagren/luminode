@@ -18,17 +18,17 @@ export const chapters = [
     blocks: [
       {
         type: 'prose',
-        md: "A computer can't read the word *cat*. So we hand it coordinates instead — a position in space. Words used in similar ways get similar positions. That's the whole trick.\n\n**→ The graph below already holds `cat`, `dog`, and `car`.** Look at where they landed.",
+        md: "A computer can't read the word *cat*. So we hand it coordinates instead — a position in space. Words used in similar ways get similar positions. That's the whole trick.\n\n**→ The graph below holds four words: `cat`, `dog`, `horse`, and `car`.** Look at where they landed.",
       },
       {
         type: 'sandbox',
-        words: ['cat', 'dog', 'car'],
-        addable: ['truck', 'banana'],
+        words: ['cat', 'dog', 'horse', 'car'],
+        addable: ['truck', 'bus'],
         caption: 'Real embeddings, flattened to 2D. Add a word and watch where it lands.',
       },
       {
         type: 'prose',
-        md: "Notice `cat` and `dog` sit together, while `car` is off on its own. Nobody told the computer *“animals go here.”* It placed them from how the words are **used** — and similar usage means nearby positions.\n\n**→ Now add `truck`.** It snaps next to `car`. Vehicles cluster; animals cluster. Meaning turned into geography.",
+        md: "Notice `cat`, `dog`, and `horse` huddle together, while `car` sits off on its own. Nobody told the computer *“animals go here.”* It placed them from how the words are **used** — and similar usage means nearby positions.\n\n**→ Now add `truck`.** It lands over by `car`, away from the animals — the vehicles are forming their own neighborhood. (Add `bus` too: same story.) Meaning turned into geography.",
       },
       {
         type: 'prose',

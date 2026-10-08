@@ -1,0 +1,83 @@
+.tb-page {
+  width: 100%;
+  min-height: 100vh;
+  overflow-y: auto;
+  background: #0e0e10;
+  color: #e8e8ea;
+}
+.tb-content {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 2.5rem 1.5rem 4rem;
+}
+.tb-explorer-link {
+  display: inline-block;
+  margin-bottom: 2rem;
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.6);
+  text-decoration: none;
+}
+.tb-explorer-link:hover {
+  color: #FF9D42;
+}
+.tb-eyebrow {
+  margin: 0 0 0.25rem;
+  font-size: 0.85rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #FF9D42;
+}
+.tb-title {
+  margin: 0 0 1.5rem;
+  font-size: 2rem;
+  line-height: 1.15;
+  color: #f8fafc;
+}
+.tb-prose {
+  font-size: 1.08rem;
+  line-height: 1.7;
+  color: rgba(232, 232, 234, 0.92);
+}
+.tb-prose p {
+  margin: 0 0 1.1rem;
+}
+.tb-prose strong {
+  color: #FF9D42;
+  font-weight: 600;
+}
+.tb-prose code {
+  font-family: 'SFMono-Regular', Menlo, monospace;
+  font-size: 0.92em;
+  padding: 1px 6px;
+  border-radius: 5px;
+  background: rgba(255, 255, 255, 0.08);
+  color: #f8fafc;
+}
+.tb-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 3rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+.tb-nav-btn {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 8px;
+  padding: 8px 16px;
+  font-size: 0.95rem;
+  color: #e8e8ea;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.tb-nav-btn:hover {
+  background: rgba(255, 157, 66, 0.12);
+  border-color: rgba(255, 157, 66, 0.4);
+  color: #FF9D42;
+}
+.tb-nav-end {
+  font-size: 0.9rem;
+  font-style: italic;
+  color: rgba(255, 255, 255, 0.4);
+}

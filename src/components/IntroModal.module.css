@@ -1,0 +1,252 @@
+.intro-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.85);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.intro-modal-content {
+  background-color: #0f172a;
+  border-radius: 12px;
+  width: 90%;
+  max-width: 900px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.8);
+  color: #e6e6e6;
+  animation: modalFadeIn 0.4s ease-out;
+  border: 1px solid rgba(255, 157, 66, 0.3);
+}
+
+@keyframes modalFadeIn {
+  from { opacity: 0; transform: translateY(-20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.intro-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem 2rem;
+  border-bottom: 1px solid rgba(255, 157, 66, 0.3);
+  position: sticky;
+  top: 0;
+  background-color: #0f172a;
+  z-index: 1;
+}
+
+.intro-modal-header h2 {
+  margin: 0;
+  font-size: 1.8rem;
+  font-weight: 600;
+  color: #FF9D42;
+  letter-spacing: 0.5px;
+}
+
+.intro-close-button {
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 1.8rem;
+  cursor: pointer;
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+
+.intro-close-button:hover {
+  color: #FF9D42;
+  background: rgba(255, 157, 66, 0.1);
+}
+
+.intro-modal-body {
+  padding: 2rem;
+  color: rgba(248, 250, 252, 0.9);
+  line-height: 1.6;
+}
+
+.intro-modal-body h3 {
+  font-size: 1.5rem;
+  color: #fff;
+  margin: 0 0 1.5rem 0;
+  text-align: center;
+}
+
+.intro-modal-body h4 {
+  font-size: 1.25rem;
+  color: #FF9D42;
+  margin: 1rem 0 0.75rem 0;
+}
+
+.intro-modal-body p {
+  margin: 0.75rem 0;
+  font-size: 1.05rem;
+  line-height: 1.6;
+}
+
+.intro-modal-body strong {
+  color: #FF9D42;
+  font-weight: 600;
+}
+
+.intro-section {
+  margin-bottom: 1.5rem;
+}
+
+.concept-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.concept-item {
+  position: relative;
+  padding-left: 0.5rem;
+  line-height: 1.4;
+}
+
+.intro-modal-body ul {
+  margin: 0.5rem 0;
+  padding-left: 1.5rem;
+}
+
+.intro-modal-body li {
+  margin: 0.5rem 0;
+  line-height: 1.5;
+}
+
+.intro-graphic {
+  height: 180px;
+  background-color: rgba(15, 15, 16, 0.5);
+  border-radius: 8px;
+  margin: 1.5rem 0;
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.vector-space {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+.dimensions-label {
+  position: absolute;
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.6);
+  font-style: italic;
+}
+
+.z-label {
+  bottom: 10px;
+  right: 10px;
+  color: rgba(255, 157, 66, 0.7);
+}
+
+.point {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background-color: #FF9D42;
+  transform: translate(-50%, -50%);
+  box-shadow: 0 0 10px rgba(255, 157, 66, 0.6);
+}
+
+.point .label {
+  position: absolute;
+  top: -20px;
+  left: 50%;
+  transform: translateX(-50%);
+  white-space: nowrap;
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 0.9rem;
+}
+
+.connector {
+  position: absolute;
+  height: 1px;
+  background-color: rgba(255, 157, 66, 0.4);
+  transform-origin: center left;
+}
+
+.connector.c1 {
+  width: 80px;
+  top: 30%;
+  left: 25%;
+  transform: rotate(25deg);
+}
+
+.connector.c2 {
+  width: 80px;
+  top: 65%;
+  left: 30%;
+  transform: rotate(15deg);
+}
+
+.intro-actions {
+  display: flex;
+  justify-content: center;
+  margin-top: 2rem;
+}
+
+.intro-button {
+  padding: 0.8rem 2rem;
+  font-size: 1.1rem;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+}
+
+.intro-button.primary {
+  background-color: #FF9D42;
+  color: #0f172a;
+}
+
+.intro-button.primary:hover {
+  background-color: #f8a859;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(255, 157, 66, 0.3);
+}
+
+@media (max-width: 768px) {
+  .intro-modal-content {
+    width: 95%;
+    max-height: 95vh;
+  }
+  
+  .intro-modal-header {
+    padding: 1rem;
+  }
+  
+  .intro-modal-header h2 {
+    font-size: 1.4rem;
+  }
+  
+  .intro-modal-body {
+    padding: 1rem;
+  }
+  
+  .intro-modal-body h3 {
+    font-size: 1.3rem;
+  }
+  
+  .intro-graphic {
+    height: 150px;
+  }
+  
+  .intro-button {
+    padding: 0.7rem 1.5rem;
+    font-size: 1rem;
+  }
+}

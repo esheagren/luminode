@@ -39,6 +39,26 @@ Show how different attention heads learn to focus on different relationships (sy
 
 ---
 
+## Interpretability & Feature Activation
+
+The natural rung above attention: not just *how* a model routes information, but *which concepts are actually active* inside it as it processes a prompt. This is the modern mechanistic-interpretability frontier (sparse autoencoders / dictionary learning), and it fits Luminode's mission — making AI internals tangible and visual — better than anything else. Luminode already renders concept-spaces in 3D and finds neighbors/axes/clusters; a feature-activation view reuses that engine on a new data source. (Idea migrated here 2026-07-16 from a discussion originally noted in the ai-aesthetics project — it belongs in Luminode.)
+
+**Implementation reality (important):** these need model *internal activations*, not embeddings — a white-box open model. The turnkey path is **Neuronpedia** (hosted SAE features + an API) on **Gemma Scope** (DeepMind's full open-weights SAE suite for Gemma 2 2B). Deeper/custom: **SAELens + TransformerLens** or **nnsight** server-side; **circuit-tracer** (Anthropic, open-sourced 2025) for attribution graphs. Closed models (Claude, GPT) can't be probed this way — API returns no activations — so this is inherently an open-small-model feature. Good "play models": Gemma 2 2B (best SAE coverage), Pythia, GPT-2 small.
+
+### Feature Activation Explorer
+Input a word or sentence, see which internal *features* light up in a small model — "the Golden Gate Bridge," "code that opens a file," "a sense of foreboding" — ranked by activation strength, each with its top-activating examples. The pedagogical payoff of the whole "how LLMs work" track: attention shows routing, this shows *content of thought*. Data via Neuronpedia's API against Gemma 2 2B; render the active features as points/clusters in Luminode's existing 3D space so users see not just a list but the geometry of what's active.
+
+### "What's on the model's mind" — Global Workspace view
+Educational framing of Anthropic's **J-space / global workspace** work (anthropic.com/research/global-workspace, 2025): a small subset of a model's activity acts like a broadcast channel — the concepts it can *report* and *flexibly reuse* — while most processing (grammar, quick facts) runs below that line. Visualize the distinction: given an input, show the handful of "workspace" concepts vs. the background substrate. Connects Global Workspace Theory (Baars/Dehaene) to something a learner can watch happen.
+
+### Stated Reason vs. Real Reason (faithfulness demo)
+The critical-thinking capstone, and a perfect entry for the existing **Failure Case Gallery** idea. Show a case where a model's *verbalized* explanation diverges from the features actually driving its output (e.g., Anthropic's "Biology of an LLM" arithmetic example: the model says "carry the one" but computes it a different way internally). Teaches that a model's stated reasons are generated text, not a readout of the mechanism. Deep lineage worth citing in the copy: Ericsson & Simon's *protocol analysis* (verbal reports valid only for heeded working-memory contents, never for "why"), Nisbett & Wilson's "Telling More Than We Can Know" (people confabulate reasons), and the CoT-faithfulness literature (Turpin et al.). Interpretability is the first tool that can check the stated reason against the real one.
+
+### Feature Steering Playground
+Amplify or suppress a chosen feature and watch the model's output change in real time — the interpretability sibling of Luminode's existing "manipulate the vectors" ethos. Neuronpedia supports steering, so this could ride on the same integration as the Feature Activation Explorer. "Turn up the 'formality' feature and re-generate; turn up 'Golden Gate Bridge' and watch it intrude everywhere." Makes causality visceral: these features aren't just labels, they *drive* behavior.
+
+---
+
 ## Embedding Algorithm Comparison
 
 ### Static vs Contextual Embedding Comparison

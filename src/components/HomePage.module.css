@@ -1,0 +1,547 @@
+.mobile-app-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  height: 100dvh;
+  background-color: #0f0f10;
+  overflow: hidden;
+}
+
+.mobile-graph-area {
+  flex: 1;
+  position: relative;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.mobile-graph-area > div:first-child {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.mobile-view-toggle {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  z-index: 100;
+  background: rgba(15, 15, 16, 0.9);
+  border-radius: 8px;
+  padding: 4px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.mobile-info-button {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  z-index: 100;
+  width: 44px;
+  height: 44px;
+  background: rgba(15, 15, 16, 0.9);
+  border: none;
+  border-radius: 50%;
+  color: #FF9D42;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.mobile-words-bar {
+  display: flex;
+  align-items: center;
+  padding: 8px 12px;
+  background: #1a1a1c;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  gap: 8px;
+}
+
+.mobile-words-scroll {
+  flex: 1;
+  display: flex;
+  gap: 6px;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+
+.mobile-words-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+.mobile-word-tag {
+  display: flex;
+  align-items: center;
+  background: #2a2a2c;
+  border-radius: 14px;
+  padding: 4px 10px;
+  font-size: 0.85rem;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.mobile-remove-word {
+  background: none;
+  border: none;
+  color: #FF5757;
+  margin-left: 6px;
+  cursor: pointer;
+  font-size: 1rem;
+  padding: 0;
+  line-height: 1;
+}
+
+.mobile-reset-btn {
+  width: 36px;
+  height: 36px;
+  background: none;
+  border: none;
+  color: #ff5757;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.mobile-error {
+  padding: 8px 12px;
+  background: rgba(255, 87, 87, 0.1);
+  color: #FF5757;
+  font-size: 0.8rem;
+  text-align: center;
+}
+
+.mobile-tools-bar {
+  background: #0f0f10;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.mobile-bottom-bar {
+  background: #0f0f10;
+  padding: 6px 10px;
+  padding-bottom: max(6px, env(safe-area-inset-bottom));
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.mobile-input-row {
+  margin-bottom: 6px;
+}
+
+/* Mobile sidebar */
+.mobile-sidebar-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  z-index: 999;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+.mobile-sidebar-overlay.visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.mobile-sidebar {
+  position: fixed;
+  top: 0;
+  left: -100%;
+  width: 85vw;
+  max-width: 320px;
+  height: 100%;
+  background: #0f0f10;
+  z-index: 1000;
+  transition: left 0.3s ease;
+  display: flex;
+  flex-direction: column;
+}
+
+.mobile-sidebar.open {
+  left: 0;
+}
+
+.mobile-sidebar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.mobile-logo-link {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  color: #f8fafc;
+  font-weight: 600;
+  font-size: 1.2rem;
+}
+
+.mobile-logo-link img {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+}
+
+.mobile-close-sidebar {
+  width: 44px;
+  height: 44px;
+  background: none;
+  border: none;
+  color: #aaa;
+  font-size: 1.5rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.mobile-sidebar-content {
+  flex: 1;
+  padding: 16px;
+  overflow-y: auto;
+}
+
+.mobile-sidebar-content h3 {
+  color: #888;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 12px;
+}
+
+.mobile-sidebar-footer {
+  padding: 16px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  gap: 24px;
+}
+
+.mobile-sidebar-footer a {
+  color: rgba(217, 175, 93, 0.75);
+  text-decoration: none;
+  font-size: 0.9rem;
+}
+
+/* Mobile learn modal */
+.mobile-learn-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 1001;
+  background: #0f0f10;
+}
+
+.app-container {
+  /* merged from App.css .app-container (global rule previously also matched this element) */
+  width: 100%;
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+  overflow-x: hidden;
+  padding-top: 10px;
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 10px); /* Reduced from 80px to 40px to extend content area */
+}
+
+.main-layout {
+  /* merged from App.css .main-layout */
+  position: relative;
+  z-index: 10;
+  min-height: calc(100vh - 80px);
+  padding-top: 0.5rem;
+  padding-bottom: 1rem;
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+  margin-bottom: 0; /* Remove any bottom margin */
+}
+
+.logo-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 0.5rem; /* Reduced from 1rem to bring elements closer */
+  padding-top: 0.25rem; /* Reduced top padding to bring it up */
+  padding-bottom: 0.25rem;
+}
+
+.logo-link {
+  /* merged from Tools.jsx, whose global .logo-link rule leaked onto this element */
+  font-weight: 600;
+  font-size: 1rem;
+  letter-spacing: 0.3px;
+  padding: 0.15rem 0.25rem;
+  border-radius: 4px;
+  transition: all 0.15s ease;
+  margin-right: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center; /* Center the logo and text */
+  text-decoration: none;
+  color: #f8fafc;
+  pointer-events: auto;
+  cursor: pointer;
+}
+
+.logo-link:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.logo-container img {
+  height: 40px;
+  width: 40px;
+  border-radius: 50%;
+  margin-right: 10px;
+  object-fit: cover;
+}
+
+.logo-text {
+  white-space: nowrap; /* from Tools.jsx leak */
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: rgba(248, 250, 252, 0.7);
+  letter-spacing: 0.5px;
+}
+
+.input-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  width: 100%;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.reset-button {
+  position: static;
+  margin-left: 10px;
+  background: none;
+  border: none;
+  color: #ff5757;
+  cursor: pointer;
+  padding: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  border-radius: 50%;
+  transform: none;
+  height: 38px;
+  width: 38px;
+  margin-top: -25px; /* Fine-tune: move up a bit more */
+}
+
+.reset-button:hover {
+  color: #ff7043; /* from Tools.jsx leak */
+  background-color: rgba(255, 87, 87, 0.1);
+  transform: scale(1.1);
+}
+
+.sidebar {
+  /* merged from App.css .sidebar */
+  min-width: 300px;
+  position: relative;
+  z-index: 1;
+  backdrop-filter: blur(5px);
+  width: 300px;
+  padding: 0.75rem 1rem; /* Reduced top padding to bring elements up */
+  overflow-y: auto;
+  background-color: #0f0f10;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem; /* Reduced from 0.75rem to bring elements closer */
+  height: 100%; /* Ensure full height */
+  border: none;
+}
+
+.words-container {
+  max-height: 600px; /* Significantly increased to allow for many more words */
+  overflow-y: auto;
+  margin-bottom: 0.5rem;
+  flex-shrink: 0; /* Prevent container from shrinking */
+  overflow-x: hidden;
+}
+
+/* Custom scrollbar styling */
+.words-container::-webkit-scrollbar {
+  width: 6px;
+}
+
+.words-container::-webkit-scrollbar-track {
+  background: transparent; 
+}
+
+.words-container::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 3px;
+}
+
+.words-container::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.selected-words {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.word-tag {
+  display: inline-flex;
+  align-items: center;
+  background-color: #2a2a2c;
+  border-radius: 16px;
+  padding: 0.25rem 0.75rem;
+  font-size: 0.9rem;
+}
+
+.remove-word {
+  background: none;
+  border: none;
+  color: #FF5757;
+  margin-left: 0.5rem;
+  cursor: pointer;
+  font-size: 1rem;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.error-message {
+  color: #FF5757;
+  padding: 0.25rem 0.5rem;
+  background-color: rgba(255, 87, 87, 0.1);
+  border-radius: 4px;
+  margin-top: 0.25rem;
+  font-size: 0.8rem;
+  max-height: 60px;
+  overflow-y: auto;
+  flex-shrink: 0; /* Prevent error message from shrinking */
+}
+
+.suggestions-section {
+  margin-top: auto; /* Push to bottom */
+  padding-top: 1rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.content-area {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.tools-bar {
+  padding: 0;
+  background-color: #0f0f10;
+  margin-bottom: 5px; /* Reduced from 10px to 5px */
+}
+
+.graph-and-learn-container {
+  display: flex;
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+.graph-area {
+  background-color: #0f172a; /* from App.css .graph-area */
+  flex: 1;
+  min-height: 500px;
+  position: relative;
+  overflow: hidden;
+  padding-bottom: 0; /* Ensure no padding at bottom */
+  transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+.graph-area > div {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.graph-area.with-learn-panel {
+  flex: 2; /* Change from 3 to 2 to give the learn panel more space */
+}
+
+.learn-panel-container {
+  flex: 1; /* Keep this as is - now it will take up 1/3 of the space instead of 1/4 */
+  height: 100%;
+  padding-left: 10px;
+  overflow: hidden;
+  transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+.home-footer {
+  width: 100%;
+  padding: 0.8rem 1.5rem;
+  display: flex;
+  justify-content: flex-start;
+  background-color: #0f0f10;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  z-index: 10;
+}
+
+.footer-links {
+  display: flex;
+  gap: 2rem;
+}
+
+.footer-links a {
+  color: rgba(217, 175, 93, 0.75); /* Muted gold color */
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 400;
+  letter-spacing: 0.5px;
+  transition: color 0.2s ease;
+  font-family: 'Inter', sans-serif;
+}
+
+.footer-links a:hover {
+  color: rgba(217, 175, 93, 0.9); /* Slightly brighter on hover */
+}
+
+/* Tablet styles */
+@media (max-width: 768px) {
+  .sidebar {
+    width: 260px;
+    min-width: 260px;
+  }
+
+  .graph-area {
+    height: 60%; /* from App.css tablet rule */
+    min-height: 400px;
+  }
+
+  .words-container {
+    max-height: 45vh;
+  }
+  .main-layout {
+    min-height: calc(100vh - 60px); /* from App.css tablet rule */
+  }
+  .word-tag {
+    /* from WordInput.jsx tablet rule, which was global */
+    padding: 0.3rem 0.6rem;
+    font-size: 0.85rem;
+  }
+
+  .home-footer {
+    padding: 0.6rem 1rem;
+  }
+}

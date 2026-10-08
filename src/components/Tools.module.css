@@ -1,0 +1,218 @@
+.tools-container {
+  /* merged from App.css glass-effect rule */
+  backdrop-filter: blur(5px);
+  border: 1px solid rgba(255, 157, 66, 0.1);
+  display: flex;
+  flex-direction: column;
+  background-color: #0f0f10;
+  border-radius: 6px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.tools-header {
+  padding: 0.15rem 0.25rem;
+  border-bottom: 1px solid #222;
+}
+
+.tool-buttons {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 0.25rem;
+}
+
+.icon-button {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: transparent;
+  color: #ccc;
+  border: none;
+  padding: 0.4rem 0.7rem;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.icon-button:hover {
+  background: rgba(255, 255, 255, 0.05);
+  color: white;
+}
+
+.learn-button {
+  color: #FF9D42;
+  margin-right: 1rem;
+}
+
+.learn-button:hover {
+  background: rgba(255, 157, 66, 0.1);
+  color: #FFC837;
+}
+
+.learn-button svg {
+  stroke: currentColor;
+}
+
+.icon-button.active {
+  background: rgba(66, 133, 244, 0.1);
+  color: #4285F4;
+  box-shadow: inset 0 -2px 0 #4285F4;
+}
+
+.icon-button.analogy-active {
+  background: rgba(255, 128, 8, 0.15);
+  color: #FF8008;
+  box-shadow: inset 0 -2px 0 #FF8008;
+  animation: activePulse 1.5s infinite;
+}
+
+.icon-button.slice-active {
+  background: rgba(142, 68, 173, 0.15);
+  color: #8E44AD;
+  box-shadow: inset 0 -2px 0 #8E44AD;
+  animation: activePulse 1.5s infinite;
+}
+
+.icon-button.linear-path-active {
+  background: rgba(33, 150, 243, 0.15);
+  color: #2196F3;
+  box-shadow: inset 0 -2px 0 #2196F3;
+  animation: activePulse 1.5s infinite;
+}
+
+.icon-button.greedy-path-active {
+  background: rgba(76, 175, 80, 0.15);
+  color: #4CAF50;
+  box-shadow: inset 0 -2px 0 #4CAF50;
+  animation: activePulse 1.5s infinite;
+}
+
+@keyframes activePulse {
+  0% { opacity: 0.8; }
+  50% { opacity: 1; }
+  100% { opacity: 0.8; }
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.spinner-icon {
+  animation: spin 1s linear infinite;
+}
+
+.icon-button.neighbors-loading {
+  background: rgba(66, 133, 244, 0.1);
+  color: #4285F4;
+}
+
+.icon-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.spacer {
+  flex-grow: 1;
+  min-width: 0.5rem;
+}
+
+.tool-content {
+  transition: max-height 0.3s ease, opacity 0.2s ease;
+  overflow: hidden;
+}
+
+.tool-content.visible {
+  max-height: 500px;
+  opacity: 1;
+}
+
+.tool-content.hidden {
+  max-height: 0;
+  opacity: 0;
+}
+
+.learn-button.active {
+  background: rgba(255, 157, 66, 0.2);
+  color: #FF9D42;
+  box-shadow: inset 0 -2px 0 #FF9D42;
+}
+
+/* Tablet responsive styles */
+@media (max-width: 768px) {
+  .tool-buttons {
+    flex-wrap: wrap;
+    gap: 0.25rem;
+  }
+
+  .icon-button {
+    padding: 0.35rem 0.5rem;
+    font-size: 0.8rem;
+  }
+
+  .icon-button span {
+    display: none;
+  }
+
+  .icon-button svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  .spacer {
+    flex-grow: 0;
+    width: 0.25rem;
+  }
+}
+
+/* Mobile responsive styles */
+@media (max-width: 480px) {
+  .tools-container {
+    border-radius: 0;
+  }
+
+  .tools-header {
+    padding: 0.25rem 0.5rem;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .tool-buttons {
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    gap: 0.15rem;
+    min-width: max-content;
+  }
+
+  .icon-button {
+    padding: 0.4rem 0.5rem;
+    min-height: 44px;
+    min-width: 44px;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .icon-button span {
+    display: none;
+  }
+
+  .icon-button svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  .spacer {
+    flex-grow: 1;
+    min-width: 0.25rem;
+  }
+
+  .learn-button {
+    margin-right: 0.5rem;
+  }
+
+  .tool-content.visible {
+    max-height: 300px;
+  }
+}

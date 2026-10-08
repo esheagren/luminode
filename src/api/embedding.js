@@ -1,8 +1,7 @@
 import axios from 'axios';
-import { getBaseUrl, logEnvironmentInfo } from '../utils/environment';
+import { getBaseUrl } from '../utils/environment';
 
 // Log environment information for debugging
-logEnvironmentInfo();
 
 // Create axios instance with dynamic configuration
 const getApiClient = () => {
@@ -17,43 +16,6 @@ const getApiClient = () => {
       'Content-Type': 'application/json'
     }
   });
-  
-  // Add request interceptor for debugging
-  client.interceptors.request.use(
-    config => {
-      // Calculate the full URL
-      const fullUrl = config.baseURL 
-        ? `${config.baseURL}${config.url}` 
-        : config.url;
-        
-      console.log(`API Request: ${config.method?.toUpperCase()} ${fullUrl}`);
-      return config;
-    },
-    error => {
-      console.error('API Request configuration error:', error);
-      return Promise.reject(error);
-    }
-  );
-  
-  // Add response interceptor for debugging
-  client.interceptors.response.use(
-    response => response,
-    error => {
-      // Create a more detailed error message for debugging
-      const errorInfo = {
-        message: error.message,
-        url: error.config?.url,
-        method: error.config?.method,
-        status: error.response?.status,
-        statusText: error.response?.statusText,
-        responseData: error.response?.data,
-      };
-      
-      console.error('API Request failed:', errorInfo);
-      
-      return Promise.reject(error);
-    }
-  );
   
   return client;
 };
@@ -83,7 +45,6 @@ const apiRequest = async (endpoint, method = 'post', data = null) => {
  */
 export const checkWord = async (word) => {
   try {
-    console.log(`Checking word: "${word}"`);
     const response = await apiRequest('checkWord', 'post', { word });
     return response;
   } catch (error) {
@@ -108,7 +69,6 @@ export const checkWord = async (word) => {
  */
 export const getVectorCoordinates = async (words, dimensions = 2) => {
   try {
-    console.log(`Getting coordinates for ${words.length} words in ${dimensions}D`);
     
     // Create a copy of words array to avoid modifying the original
     const wordsToProcess = [...words].slice(0, 20); // Limit to 20 words max
@@ -150,7 +110,6 @@ export const getVectorCoordinates = async (words, dimensions = 2) => {
  */
 export const findNeighbors = async (word, numResults = 5, useExactSearch = false) => {
   try {
-    console.log(`Finding neighbors for "${word}" with ${useExactSearch ? 'exact' : 'approximate'} search`);
     
     const response = await apiRequest('findNeighbors', 'post', {
       word,
@@ -186,7 +145,6 @@ export const findMidpoint = async (
   useExactSearch = true
 ) => {
   try {
-    console.log(`Finding midpoint between "${word1}" and "${word2}"`);
     
     const response = await apiRequest('findMidpoint', 'post', {
       word1,
@@ -229,7 +187,6 @@ export const findAnalogy = async (
   useExactSearch = true
 ) => {
   try {
-    console.log(`Finding analogy ${word1}:${word2}::${word3}:?`);
     
     const response = await apiRequest('findAnalogy', 'post', {
       word1,

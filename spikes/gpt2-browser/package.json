@@ -1,0 +1,19 @@
+{
+  "name": "gpt2-browser",
+  "version": "1.0.0",
+  "description": "Feasibility spike: GPT-2 small in the browser via transformers.js",
+  "main": "index.js",
+  "scripts": {
+    "run": "node run.js",
+    "bundle": "esbuild main.js --bundle --format=esm --platform=browser --outfile=dist/main.bundle.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@huggingface/transformers": "3.8.1",
+    "esbuild": "0.24.2",
+    "playwright": "1.49.1"
+  },
+  "type": "module"
+}

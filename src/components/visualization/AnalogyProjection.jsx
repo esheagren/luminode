@@ -11,12 +11,6 @@ import React from 'react';
  */
 const drawAnalogyProjection = (sourcePoint, referencePoint1, referencePoint2, ctx, timestamp = Date.now()) => {
   if (!sourcePoint || !referencePoint1 || !referencePoint2 || !ctx) {
-    console.warn('Missing required parameters for analogy projection', {
-      hasSourcePoint: !!sourcePoint,
-      hasReferencePoint1: !!referencePoint1,
-      hasReferencePoint2: !!referencePoint2,
-      hasContext: !!ctx
-    });
     return;
   }
   

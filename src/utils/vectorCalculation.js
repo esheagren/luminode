@@ -37,16 +37,13 @@ export const findMidpoint = async (
 ) => {
   try {
     // More detailed logging to debug the issue
-    console.log(`Finding midpoint between "${word1}" and "${word2}" with numResults=${numResults}, recursionDepth=${recursionDepth}, useExactSearch=${useExactSearch}`);
     
     // Validate input
     if (!word1 || !word2) {
-      console.error('Missing required parameters:', { word1, word2 });
       throw new Error('Both words are required for midpoint calculation');
     }
     
     const apiUrl = getApiUrl('/api/findMidpoint');
-    console.log('API URL:', apiUrl);
     
     const response = await axios.post(apiUrl, {
       word1,
@@ -57,11 +54,9 @@ export const findMidpoint = async (
     });
     
     if (response.data && response.data.data) {
-      console.log('Midpoint API response:', response.data);
       return response.data.data;
     }
     
-    console.error('Invalid API response:', response.data);
     throw new Error('Invalid response from server');
   } catch (error) {
     console.error('Error finding midpoint:', error);
@@ -138,7 +133,6 @@ export const processMidpointResults = (results, word1, word2, recursionDepth = 0
   if (results.secondaryMidpoints && results.secondaryMidpoints.length > 0) {
     results.secondaryMidpoints.forEach(midpoint => {
       if (!midpoint.nearestWords || !Array.isArray(midpoint.nearestWords)) {
-        console.warn('Invalid secondary midpoint structure:', midpoint);
         return;
       }
       

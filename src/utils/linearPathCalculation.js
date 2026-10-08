@@ -11,14 +11,12 @@ import { getApiUrl } from './environment';
  */
 export const findLinearPath = async (word1, word2, numSteps = 10) => {
   try {
-    console.log(`Finding linear path between "${word1}" and "${word2}" with ${numSteps} steps`);
 
     if (!word1 || !word2) {
       throw new Error('Both words are required for linear path calculation');
     }
 
     const apiUrl = getApiUrl('/api/findLinearPath');
-    console.log('API URL:', apiUrl);
 
     const response = await axios.post(apiUrl, {
       word1,
@@ -27,7 +25,6 @@ export const findLinearPath = async (word1, word2, numSteps = 10) => {
     });
 
     if (response.data && response.data.data) {
-      console.log('Linear path API response:', response.data);
       return response.data.data;
     }
 
@@ -82,6 +79,5 @@ export const processLinearPathResults = (results, word1, word2) => {
     });
   }
 
-  console.log("Processed linear path results:", linearPathCluster);
   return linearPathCluster;
 };

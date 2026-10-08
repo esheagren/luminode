@@ -6,6 +6,7 @@ import VectorGraph3D from './visualization/VectorGraph3D';
 import LoadingOverlay from './visualization/LoadingOverlay';
 import ErrorOverlay from './visualization/ErrorOverlay';
 import { getApiUrl } from '../utils/environment';
+import styles from './VectorGraph.module.css';
 
 const VectorGraph = ({ 
   words, 
@@ -31,7 +32,6 @@ const VectorGraph = ({
   useEffect(() => {
     if (!words || words.length === 0) {
       // Clear coordinates when there are no words
-      console.log('No words to visualize, clearing the graph');
       setCoordinates([]);
       return;
     }
@@ -59,11 +59,9 @@ const VectorGraph = ({
         // Make sure we have unique words only
         const uniqueWords = [...new Set(allWords)];
         
-        console.log(`Fetching ${viewMode} coordinates for words:`, uniqueWords);
         
         // Get the vector coordinates for visualization
         const apiUrl = getApiUrl('/api/getVectorCoordinates');
-        console.log('API URL for vectors:', apiUrl);
         
         const response = await axios.post(apiUrl, { 
           words: uniqueWords,
@@ -71,35 +69,8 @@ const VectorGraph = ({
           includeMeasureVectors: rulerActive
         });
         
-        console.log('API response received:', {
-          status: response.status,
-          dataLength: response.data?.data?.length || 0,
-          message: response.data?.message,
-          invalidWords: response.data?.invalidWords || []
-        });
 
-        // Check if we have vector data for measurement
-        const vectorStats = response.data.data.reduce((stats, point) => {
-          if (point.measureVector) stats.withMeasureVector++;
-          if (point.truncatedVector) stats.withTruncatedVector++;
-          return stats;
-        }, { withMeasureVector: 0, withTruncatedVector: 0 });
-        
-        console.log('Vector data stats:', vectorStats, 
-          `${vectorStats.withMeasureVector} of ${response.data.data.length} points have measureVector data (${Math.round(vectorStats.withMeasureVector / response.data.data.length * 100)}%)`);
 
-        // Sample the first point to see its structure
-        if (response.data.data.length > 0) {
-          const samplePoint = response.data.data[0];
-          console.log('Sample point structure:', {
-            word: samplePoint.word,
-            hasMeasureVector: !!samplePoint.measureVector,
-            measureVectorType: samplePoint.measureVector ? typeof samplePoint.measureVector : 'N/A',
-            measureVectorLength: Array.isArray(samplePoint.measureVector) ? samplePoint.measureVector.length : 'N/A',
-            hasTruncatedVector: !!samplePoint.truncatedVector,
-            truncatedVectorType: typeof samplePoint.truncatedVector
-          });
-        }
         
         // Combine coordinate data with cluster info (vector data is already in response.data.data)
         const coordinatesWithDetails = response.data.data.map(point => {
@@ -137,7 +108,6 @@ const VectorGraph = ({
             midpointLevel = midpointWord?.midpointLevel || 'primary';
             midpointSource = midpointWord?.midpointSource || null;
             
-            console.log(`Found midpoint word ${point.word} with level ${midpointLevel}`, midpointWord);
           }
           
           // Check if this point is part of a slice result
@@ -169,7 +139,6 @@ const VectorGraph = ({
               similarity = sliceWord.similarity || null;
               distance = sliceWord.distance || null;
 
-              console.log(`Found slice word ${point.word} with level ${sliceLevel}`, sliceWord);
             }
           }
 
@@ -190,7 +159,6 @@ const VectorGraph = ({
               linearPathIndex = linearPathWord.pathIndex;
               linearPathEndpoint = !!linearPathWord.isEndpoint;
 
-              console.log(`Found linear path word ${point.word} at index ${linearPathIndex}`, linearPathWord);
             }
           }
 
@@ -211,7 +179,6 @@ const VectorGraph = ({
               greedyPathIndex = greedyPathWord.pathIndex;
               greedyPathEndpoint = !!greedyPathWord.isEndpoint;
 
-              console.log(`Found greedy path word ${point.word} at index ${greedyPathIndex}`, greedyPathWord);
             }
           }
 
@@ -234,7 +201,6 @@ const VectorGraph = ({
               projectionPosition = projWord.position;
               perpendicularDistance = projWord.perpendicularDistance;
 
-              console.log(`Found axis projection word ${point.word} at position ${projectionPosition}`, projWord);
             }
           }
 
@@ -264,7 +230,6 @@ const VectorGraph = ({
         });
         
         // Debug the coordinates data after processing
-        console.log('Processed coordinates with clusters:', coordinatesWithDetails);
         
         setCoordinates(coordinatesWithDetails);
       } catch (error) {
@@ -317,7 +282,7 @@ const VectorGraph = ({
   }, [viewMode]);
 
   return (
-    <div className="graph-container" ref={containerRef}>
+    <div className={styles.graphContainer} ref={containerRef}>
       {loading && <LoadingOverlay />}
       
       {error && <ErrorOverlay error={error} />}
@@ -346,26 +311,6 @@ const VectorGraph = ({
         )}
       </div>
       
-      <style jsx="true">{`
-        .graph-container {
-          width: 100%;
-          height: 100%;
-          position: relative;
-          overflow: hidden;
-          background: linear-gradient(135deg, #0f0f10 0%, #1a1a1c 100%);
-          border-radius: 12px;
-          border: 1px solid rgba(255, 255, 255, 0.05);
-          box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-        }
-        
-        .vector-canvas {
-          position: absolute;
-          top: 20px;
-          left: 20px;
-          background-color: transparent;
-          border-radius: 8px;
-        }
-      `}</style>
     </div>
   );
 };
