@@ -1,0 +1,98 @@
+/* The admin shell escapes the legacy app wrappers (fixed height, overflow hidden, centred text)
+   by taking the viewport itself. Tokens only. */
+.shell {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-overlay);
+  overflow-y: auto;
+  overflow-x: hidden;
+  background: var(--ink);
+  color: var(--fg);
+  font-family: var(--font-body);
+  font-size: var(--text-md);
+  line-height: var(--leading-body);
+  text-align: left;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Legacy index.css styles bare h1/h2/p/button; every element here carries a class that sets
+   margin, colour, alignment and (for buttons) background, border, padding and transition. */
+
+.header {
+  position: sticky;
+  top: 0;
+  z-index: var(--z-rail);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  flex-wrap: wrap;
+  padding: var(--space-3) var(--space-6);
+  background: var(--ink);
+  border-bottom: 1px solid var(--line);
+}
+
+.brand {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-2);
+}
+.wordmark {
+  font-family: var(--font-display);
+  font-size: var(--text-xl);
+  font-weight: 500;
+  color: var(--fg);
+}
+.sub {
+  font-family: var(--font-body);
+  font-size: var(--text-xs);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  color: var(--mute);
+}
+
+.nav {
+  display: flex;
+  gap: var(--space-1);
+}
+.tab {
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  font-weight: 500;
+  color: var(--mute);
+  text-decoration: none;
+  padding: var(--space-1) var(--space-3);
+  border-radius: var(--radius-pill);
+  border: 1px solid transparent;
+  transition: color var(--quarter) var(--ease), border-color var(--quarter) var(--ease);
+}
+.tab:hover {
+  color: var(--fg);
+}
+.tab:focus-visible {
+  outline: 2px solid var(--phosphor);
+  outline-offset: 2px;
+}
+.tabOn {
+  color: var(--amber);
+  border-color: var(--amber);
+}
+
+.main {
+  padding: var(--space-6);
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+@media (max-width: 640px) {
+  .header {
+    padding: var(--space-3) var(--space-4);
+  }
+  .main {
+    padding: var(--space-4);
+  }
+  .nav {
+    width: 100%;
+    overflow-x: auto;
+  }
+}

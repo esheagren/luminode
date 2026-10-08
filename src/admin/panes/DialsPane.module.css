@@ -1,0 +1,226 @@
+.pane {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+
+.intro {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: var(--space-4);
+  flex-wrap: wrap;
+}
+.title {
+  font-family: var(--font-display);
+  font-size: var(--text-2xl);
+  font-weight: 400;
+  color: var(--fg);
+  margin: 0;
+  text-align: left;
+  line-height: 1.1;
+}
+.lede {
+  font-size: var(--text-md);
+  color: var(--mute);
+  margin: var(--space-2) 0 0;
+  max-width: 60ch;
+  text-align: left;
+}
+.actions {
+  display: flex;
+  gap: var(--space-2);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: var(--space-4);
+  align-items: start;
+}
+
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.colors {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+.colorRow {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+.colorLabel {
+  display: inline-flex;
+}
+.colorName {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-rows: auto auto;
+  column-gap: var(--space-3);
+  align-items: center;
+  flex: 1;
+  min-width: 0;
+}
+.colorKey {
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  color: var(--fg);
+}
+.colorRole {
+  grid-row: 2;
+  font-size: var(--text-xs);
+  color: var(--mute);
+}
+.hex {
+  grid-column: 2;
+  grid-row: 1 / span 2;
+  width: 6.5rem;
+}
+
+.durations {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--space-2);
+  margin: 0;
+}
+.duration dt {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--mute);
+}
+.duration dd {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: var(--text-md);
+  color: var(--fg);
+}
+
+.specimen {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+.display {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: 400;
+  font-size: var(--text-2xl);
+  color: var(--fg);
+  margin: 0;
+  text-align: left;
+  line-height: 1.1;
+}
+.body {
+  font-family: var(--font-body);
+  font-size: var(--text-md);
+  line-height: var(--leading-body);
+  color: var(--fg);
+  margin: 0;
+  max-width: 64ch;
+  text-align: left;
+}
+.mono {
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  color: var(--phosphor);
+  margin: 0;
+  text-align: left;
+}
+
+.motion {
+  grid-column: 1 / -1;
+}
+.motionHead {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: var(--space-3);
+}
+.strip {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+.lane {
+  display: grid;
+  grid-template-columns: 9rem minmax(0, 1fr);
+  align-items: center;
+  gap: var(--space-3);
+}
+.laneLabel {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--mute);
+}
+.track {
+  position: relative;
+  container-type: inline-size;
+  height: var(--space-4);
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+.ball {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: var(--space-3);
+  height: var(--space-3);
+  margin-top: calc(var(--space-3) / -2);
+  border-radius: var(--radius-pill);
+  background: var(--amber);
+  box-shadow: 0 0 var(--space-2) var(--amber);
+  transform: translateX(0);
+  transition-property: transform, background-color;
+  transition-timing-function: var(--ease);
+}
+.ballEighth {
+  transition-duration: var(--eighth);
+}
+.ballQuarter {
+  transition-duration: var(--quarter);
+}
+.ballBeat {
+  transition-duration: var(--beat);
+}
+.ballBar {
+  transition-duration: var(--bar);
+}
+.ballOn {
+  transform: translateX(calc(100cqw - 100%));
+  background: var(--ember);
+}
+
+.export {
+  min-width: 0;
+}
+.pre {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  line-height: 1.5;
+  color: var(--fg);
+  background: var(--ink);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  padding: var(--space-3);
+  margin: var(--space-3) 0 0;
+  overflow-x: auto;
+  text-align: left;
+  white-space: pre;
+}
+
+@media (max-width: 640px) {
+  .lane {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-1);
+  }
+  .durations {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}

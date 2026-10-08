@@ -1,0 +1,128 @@
+.pane {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+
+.intro {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: var(--space-4);
+  flex-wrap: wrap;
+}
+.title {
+  font-family: var(--font-display);
+  font-size: var(--text-2xl);
+  font-weight: 400;
+  color: var(--fg);
+  margin: 0;
+  text-align: left;
+  line-height: 1.1;
+}
+.lede {
+  font-size: var(--text-md);
+  color: var(--mute);
+  margin: var(--space-2) 0 0;
+  max-width: 60ch;
+  text-align: left;
+}
+
+.counts {
+  display: flex;
+  gap: var(--space-4);
+  margin: 0;
+}
+.count {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  min-width: 3.5rem;
+}
+.count dt {
+  font-size: var(--text-xs);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  color: var(--mute);
+}
+.count dd {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: var(--text-xl);
+  color: var(--fg);
+  line-height: 1.1;
+}
+.countOpen dd {
+  color: var(--amber);
+}
+.countFixed dd {
+  color: var(--phosphor);
+}
+.countWontfix dd {
+  color: var(--mute);
+}
+
+.group {
+  min-width: 0;
+}
+.groupTitle {
+  font-family: var(--font-display);
+  font-size: var(--text-lg);
+  font-weight: 500;
+  color: var(--fg);
+  margin: 0 0 var(--space-2);
+  text-align: left;
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-3);
+}
+.groupCount {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--mute);
+}
+
+.list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border-top: 1px solid var(--line);
+}
+.item {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  gap: var(--space-3);
+  align-items: center;
+  padding: var(--space-2) 0;
+  border-bottom: 1px solid var(--line);
+  transition: opacity var(--quarter) var(--ease);
+}
+.itemFixed .text {
+  color: var(--mute);
+  text-decoration: line-through;
+  text-decoration-color: var(--phosphor);
+}
+.itemWontfix .text {
+  color: var(--mute);
+}
+.text {
+  font-size: var(--text-sm);
+  line-height: var(--leading-body);
+  color: var(--fg);
+  min-width: 0;
+}
+.step {
+  color: var(--phosphor);
+}
+.status {
+  display: inline-flex;
+}
+
+@media (max-width: 640px) {
+  .item {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+  .text {
+    grid-column: 1 / -1;
+  }
+}

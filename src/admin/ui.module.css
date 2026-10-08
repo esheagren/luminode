@@ -1,0 +1,174 @@
+/* Shared controls for the admin design space. Tokens only. */
+
+.button {
+  font: inherit;
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  font-weight: 500;
+  color: var(--fg);
+  background: var(--raise);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  padding: var(--space-2) var(--space-3);
+  line-height: 1.2;
+  cursor: pointer;
+  transition: border-color var(--quarter) var(--ease), background-color var(--quarter) var(--ease), color var(--quarter) var(--ease);
+}
+.button:hover {
+  border-color: var(--mute);
+}
+.button:focus,
+.button:focus-visible {
+  outline: 2px solid var(--phosphor);
+  outline-offset: 2px;
+}
+.button[aria-pressed='true'],
+.buttonOn {
+  color: var(--ink);
+  background: var(--amber);
+  border-color: var(--amber);
+}
+.buttonQuiet {
+  background: transparent;
+}
+
+.select,
+.input,
+.textarea {
+  font: inherit;
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  color: var(--fg);
+  background: var(--field);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  padding: var(--space-1) var(--space-2);
+  line-height: 1.4;
+  min-width: 0;
+  max-width: 100%;
+}
+.select:focus-visible,
+.input:focus-visible,
+.textarea:focus-visible,
+.range:focus-visible,
+.color:focus-visible {
+  outline: 2px solid var(--phosphor);
+  outline-offset: 2px;
+}
+.textarea {
+  width: 100%;
+  resize: vertical;
+  line-height: var(--leading-body);
+}
+.mono {
+  font-family: var(--font-mono);
+}
+.range {
+  width: 100%;
+  accent-color: var(--amber);
+}
+.color {
+  width: 2.2rem;
+  height: 1.6rem;
+  padding: 0;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: var(--field);
+  cursor: pointer;
+}
+
+.label {
+  display: block;
+  font-family: var(--font-body);
+  font-size: var(--text-xs);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  color: var(--mute);
+  margin-bottom: var(--space-1);
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  min-width: 0;
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  align-items: flex-end;
+}
+
+.card {
+  background: var(--field);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  padding: var(--space-4);
+  min-width: 0;
+}
+
+.cardTitle {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: var(--text-xl);
+  color: var(--fg);
+  margin: 0 0 var(--space-2);
+  text-align: left;
+}
+
+.caption {
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  color: var(--mute);
+  line-height: var(--leading-body);
+  margin: var(--space-3) 0 0;
+  text-align: left;
+}
+.caption em {
+  color: var(--fg);
+  font-style: normal;
+}
+
+.tag {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--mute);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-pill);
+  padding: 0 var(--space-2);
+  line-height: 1.6;
+  white-space: nowrap;
+}
+.tagAmber {
+  color: var(--amber);
+  border-color: var(--amber);
+}
+.tagPhosphor {
+  color: var(--phosphor);
+  border-color: var(--phosphor);
+}
+
+.stage {
+  position: relative;
+  width: 100%;
+  background: var(--field);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+.stage canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
